@@ -1,1 +1,1 @@
-web: gunicorn SchoolApp.wsgi --log-file -
+web: python manage.py migrate && gunicorn SchoolApp.wsgi --log-file -
