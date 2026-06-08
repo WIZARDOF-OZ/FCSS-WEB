@@ -15,8 +15,7 @@
     <meta name="format-detection" content="telephone=no">
 
     <link rel="icon" href="{% static 'images/icon/favicon.ico' %}" type="image/x-icon" />
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/icon/school__logo-removebg-preview.png' %}" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/icon/bg-logo-removebg-preview.png' %}" />
 
     <title>Fatima Convent Senior Secondary</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,7 +63,8 @@
                             </div>
                             <ul class="nav navbar-nav">
                                 <li><a href="{% url 'home' %}">Home</a></li>
-                                <li class="active"><a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
+                                <li class="active">
+                                    <a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="{% url 'about' %}">About</a></li>
                                         <li><a href="{% url 'error-404' %}">Event</a></li>
@@ -73,7 +73,8 @@
                                 </li>
                                 <li class="active"><a href="{% url 'contact' %}">Contact Us</a></li>
                                 <li><a href="{% url 'gallery' %}">Gallery</a></li>
-                                <li class="add-mega-menu"><a href="javascript:;">Academics<i class="fa fa-chevron-down"></i></a>
+                                <li class="add-mega-menu">
+                                    <a href="javascript:;">Academics<i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu add-menu">
                                         <li class="add-menu-left">
                                             <h5 class="menu-adv-title">Academics</h5>
@@ -88,7 +89,8 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="nav-dashboard"><a href="javascript:;">Administration<i class="fa fa-chevron-down"></i></a>
+                                <li class="nav-dashboard">
+                                    <a href="javascript:;">Administration<i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">
                                         <li class="add-menu-left">
                                             <h5 class="menu-adv-title">School Administration</h5>
@@ -115,7 +117,8 @@
         <!-- Header END ==== -->
 
         <div class="page-content bg-white">
-            <div class="page-banner" style="background-image:url('{% static 'images/banner/banner1.jpeg' %}');">
+            <div class="page-banner"
+                style="background-image:url('{% static "images/banner/banner1.jpeg" %}');">
                 <div class="container">
                     <div class="page-banner-entry">
                         <h1 class="text-white">Contact Us</h1>
@@ -131,7 +134,7 @@
                 </div>
             </div>
 
-            <div class="page-banner contact-page section-sp2">
+            <div class=" contact-page section-sp2">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-5 col-md-5 m-b30">
@@ -190,8 +193,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="form_need">Please specify your need *</label>
-                                                <select id="form_need" name="need" class="form-control" required="required"
-                                                    data-error="Please specify your need.">
+                                                <select id="form_need" name="need" class="form-control"
+                                                    required="required" data-error="Please specify your need.">
                                                     <option value=""></option>
                                                     <option value="Admission">Admission</option>
                                                     <option value="Job Vacancy">Job Vacancy</option>
@@ -220,10 +223,10 @@
                             </form>
                         </div>
 
-                        <div class="col-lg-6 col-md-6 p-lr0 d-flex" style="flex: 2 0 74%; max-width: 100%; margin-top:53px;">
+                        <div class="col-lg-6 col-md-6 p-lr0 d-flex" style="flex: 2 0 74%; max-width: 100%; margin-top: 53px;">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2489.952167037188!2d91.6091972868946!3d26.4382232171264!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375bb314f8dca4a5%3A0x6a2e2bb22dfd2a8f!2sFatima%20Convent%20Senior%20Secondary%20School!5e0!3m2!1sen!2sin!4v1672767223856!5m2!1sen!2sin"
-                                class="align-self-stretch d-flex" style="width:100%; min-height: 300px;"
+                                class="align-self-stretch d-flex" style="width: 100%; min-height: 300px;"
                                 allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
@@ -285,7 +288,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 text-center text-white">
-                            Developed, Designed & Maintained By <div class="name-highlight">&lt;/Tensor_Block&gt;</div>
+                            Developed, Designed & Maintained By
+                            <div class="name-highlight">&lt;/Tensor_Block&gt;</div>
                         </div>
                     </div>
                 </div>
@@ -313,4 +317,5 @@
     <script src="{% static 'vendors/switcher/switcher.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
 </body>
+
 </html>
