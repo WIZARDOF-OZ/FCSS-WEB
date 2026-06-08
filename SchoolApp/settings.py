@@ -6,7 +6,7 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
-    DEBUG=(bool, False)  # default DEBUG to False for safety
+    DEBUG=(bool, True)  # default DEBUG to False for safety
 )
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))  # explicit path to .env
 
@@ -27,7 +27,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'App',
+    # 'cloudinary_storage',
+    # 'cloudinary',
 ]
+
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+#     'API_KEY': env('CLOUDINARY_API_KEY'),
+#     'API_SECRET': env('CLOUDINARY_API_SECRET'),
+# }
+
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',  # must be first
@@ -60,10 +70,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SchoolApp.wsgi.application'
 
+CSRF_TRUSTED_ORIGINS = ['https://web-production-de7a9.up.railway.app']
+
 
 # Database — uses DATABASE_URL env var in production, SQLite locally
 DATABASES = {
-    'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
+    'default': env.db(
+        'DATABASE_URL',                              # looks for this env variable
+        default=f'sqlite:///{BASE_DIR}/db.sqlite3'  # uses this if DATABASE_URL not set
+    )
 }
 
 

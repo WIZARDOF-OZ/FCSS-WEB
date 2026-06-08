@@ -17,11 +17,14 @@ def about_view(request):
     }
     return render(request, 'about.html', data)
 
-def error_404(request):
-    pass
+def error_404(request, exception=None):
+    return render(request, 'error-404.html', status=404)
 
 def contact(request):
-    pass
+    if request.method == 'POST':
+        # handle form data here later
+        return render(request, 'contact.html', {'success': True})
+    return render(request, 'contact.html')
 
 def gallery(request):
     # Get distinct categories from the Gallery model
