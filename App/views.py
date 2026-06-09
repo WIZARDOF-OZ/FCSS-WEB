@@ -7,7 +7,11 @@ import hashlib
 
 
 def send_emails_async(subject, body, from_email, to_email, reply_to, name, need, message, confirmation_to):
+    import django
     try:
+        from django.core.mail import EmailMessage as DjangoEmailMessage
+        print(f"ATTEMPTING EMAIL TO: {to_email}")
+        print(f"FROM: {from_email}")
         from django.core.mail import EmailMessage as DjangoEmailMessage
 
         # Email to school
@@ -19,7 +23,7 @@ def send_emails_async(subject, body, from_email, to_email, reply_to, name, need,
             reply_to=[reply_to],
         )
         mail.send(fail_silently=False)
-
+        print("SCHOOL EMAIL SENT SUCCESSFULLY")
         # Confirmation email to submitter
         confirmation_html = f"""
 <html>
@@ -52,10 +56,13 @@ def send_emails_async(subject, body, from_email, to_email, reply_to, name, need,
             to=[confirmation_to],
         )
         confirmation.content_subtype = 'html'
+        
         confirmation.send(fail_silently=True)
-
+        print("CONFIRMATION EMAIL SENT SUCCESSFULLY")
     except Exception as e:
+        import traceback
         print(f"EMAIL ERROR: {str(e)}")
+        print(traceback.format_exc())
 
 
 def home(request):
