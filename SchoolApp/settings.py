@@ -28,17 +28,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'App',
-    # 'cloudinary_storage',
-    # 'cloudinary',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
-#     'API_KEY': env('CLOUDINARY_API_KEY'),
-#     'API_SECRET': env('CLOUDINARY_API_SECRET'),
-# }
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
+}
 
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',  # must be first
@@ -71,7 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SchoolApp.wsgi.application'
 
-CSRF_TRUSTED_ORIGINS = ['https://web-production-de7a9.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://fcss-web.onrender.com']
 
 
 # Database — uses DATABASE_URL env var in production, SQLite locally
