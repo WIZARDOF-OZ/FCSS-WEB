@@ -7,7 +7,18 @@ import hashlib
 
 def home(request):
     banner_images = list(Banner.objects.all())
-    return render(request, 'index.html', {'banner_images': banner_images})
+    gallery_items = list(GalleryItem.objects.all()[:6])
+    facilities = [
+        ['Football & Cricket Field', 'Badminton Court'],
+        ['Basketball Court', 'Library'],
+        ['Auditoriums', 'Science Lab'],
+        ['IT LAB', 'Music Room'],
+    ]
+    return render(request, 'index.html', {
+        'banner_images': banner_images,
+        'gallery_items': gallery_items,
+        'facilities': facilities,
+    })
 
 
 def about_view(request):
