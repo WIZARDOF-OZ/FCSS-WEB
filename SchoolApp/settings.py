@@ -2,24 +2,14 @@ from pathlib import Path
 import os
 import environ
 
-from dotenv import load_dotenv
-load_dotenv()  # load .env file into environment variables
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env(
-    DEBUG=(bool, True)
-)
+env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-f&cezp*&k=yu$&2$2*zmaqf85uyz$v!)o-&9*d7yjp2)*5o=&7')
-
 DEBUG = env.bool('DEBUG', default=True)
-
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
-
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
 INSTALLED_APPS = [
@@ -28,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',              #  before staticfiles
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
     'App',
@@ -64,19 +54,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'SchoolApp.wsgi.application'
-
 CSRF_TRUSTED_ORIGINS = ['https://fcss-web.onrender.com']
 
-# Database
 DATABASES = {
-    'default': env.db(
-        'DATABASE_URL',
-        default=f'sqlite:///{BASE_DIR}/db.sqlite3'
-    )
+    'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
 }
 
-
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -84,13 +67,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
-
 
 # Static files
 STATIC_URL = '/static/'
@@ -98,18 +78,25 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
-# Email settings
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
