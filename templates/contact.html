@@ -43,15 +43,7 @@
         display: none !important;
     }
 </style>
-   <script type="text/javascript">
-        var onloadCallback = function () {
-            grecaptcha.render('g-recaptcha', {
 
-                'sitekey': "6LfBntMjAAAAAFpu7LXiWpAsDxFq1HxFBz687My4"
-            });
-        };</script>
-
-    </script> 
 </head>
 
 <body id="bg">
@@ -188,88 +180,88 @@
                                 <div class="messages"></div>
                                 <div class="controls">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="form_name">Firstname *</label>
-                                                <input id="form_name" type="text" name="name" class="form-control"
-                                                    placeholder="Please enter your firstname *" required="required"
-                                                    data-error="Firstname is required.">
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="form_lastname">Lastname *</label>
-                                                <input id="form_lastname" type="text" name="surname" class="form-control"
-                                                    placeholder="Please enter your lastname *" required="required"
-                                                    data-error="Lastname is required.">
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="form_email">Email *</label>
-                                                <input id="form_email" type="email" name="email" class="form-control"
-                                                    placeholder="Please enter your email *" required="required"
-                                                    data-error="Valid email is required.">
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="form_need" >Please specify your need *</label>
-                                                <select id="form_need" name="need" class="form-control no-bootstrap-select"
-                                                    required="required" data-error="Please specify your need.">
-                                                    <option value=""></option>
-                                                    <option value="Admission">Admission</option>
-                                                    <option value="Job Vacancy">Job Vacancy</option>
-                                                    <option value="Fees Payment">Fees Payment</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="form_message">Message *</label>
-                                                <textarea id="form_message" name="message" class="form-control"
-                                                    placeholder="Message for me *" rows="4" required="required"
-                                                    data-error="Please, leave us a message."></textarea>
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class = "row"> 
-<div class="col-lg-12"> 
-<div class = "form-group"> 
-    <div class="input-group">
-                                                        <div class="g-recaptcha"
-                                                            data-sitekey="6LfBntMjAAAAAFpu7LXiWpAsDxFq1HxFBz687My4"
-                                                            data-callback="verifyRecaptchaCallback"
-                                                            data-expired-callback="expiredRecaptchaCallback"
-                                                        
-                                                            id="g-recaptcha"></div>
-                                                        <input class="form-control d-none" style="display:none;"
-                                                            data-recaptcha="true" required
-                                                            data-error="Please complete the Captcha">
-                                                    </div>
-</div>
-</div>
-                                    </div>
-                                    {% if error %}
-    <div class="alert alert-danger mt-2">{{ error }}</div>
-{% endif %}
+                
 
+
+<!-- inside the form -->
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="form_name">Firstname *</label>
+        <input id="form_name" type="text" name="name" class="form-control"
+            placeholder="Please enter your firstname *"
+            value="{{ form_data.name }}">
+        {% if errors.name %}
+            <small class="text-danger">{{ errors.name }}</small>
+        {% endif %}
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="form_lastname">Lastname *</label>
+        <input id="form_lastname" type="text" name="surname" class="form-control"
+            placeholder="Please enter your lastname *"
+            value="{{ form_data.surname }}">
+        {% if errors.surname %}
+            <small class="text-danger">{{ errors.surname }}</small>
+        {% endif %}
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="form_email">Email *</label>
+        <input id="form_email" type="email" name="email" class="form-control"
+            placeholder="Please enter your email *"
+            value="{{ form_data.email }}">
+        {% if errors.email %}
+            <small class="text-danger">{{ errors.email }}</small>
+        {% endif %}
+    </div>
+</div>
+<!-- Honeypot field, hidden from humans, bots will fill it -->
+<div style="display:none;">
+    <label for="website">Website</label>
+    <input type="text" name="website" id="website" autocomplete="off" tabindex="-1">
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label for="form_need">Please specify your need *</label>
+        <select id="form_need" name="need" class="form-control no-bootstrap-select">
+            <option value="">-- Select --</option>
+            <option value="Admission"    {% if form_data.need == 'Admission' %}selected{% endif %}>Admission</option>
+            <option value="Job Vacancy"  {% if form_data.need == 'Job Vacancy' %}selected{% endif %}>Job Vacancy</option>
+            <option value="Fees Payment" {% if form_data.need == 'Fees Payment' %}selected{% endif %}>Fees Payment</option>
+            <option value="Other"        {% if form_data.need == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+        {% if errors.need %}
+            <small class="text-danger">{{ errors.need }}</small>
+        {% endif %}
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="form-group">
+        <label for="form_message">Message *</label>
+        <textarea id="form_message" name="message" class="form-control"
+            placeholder="Message for me *" rows="4">{{ form_data.message }}</textarea>
+        {% if errors.message %}
+            <small class="text-danger">{{ errors.message }}</small>
+        {% endif %}
+    </div>
+</div>
 {% if success %}
-    <div class="alert alert-success mt-2">Your message was sent successfully!</div>
+<div class="alert-success" style="display:none;"></div>
 {% endif %}
-                                    <div class="col-md-12 m-t10">
-                                        <input type="submit" class="btn btn-success btn-send" value="Send message">
+<div class="col-md-12 m-t10">
+    <input type="submit" class="btn btn-success btn-send" value="Send message">
+</div>
+                                        
                                     </div>
+                                    
+                                   
+
+                                    
                                 </div>
                             </form>
                         </div>
@@ -350,8 +342,7 @@
 
         <button class="back-to-top fa fa-chevron-up"></button>
     </div>
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-    <script src="{% static 'js/jquery.min.js' %}"></>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'vendors/bootstrap/js/popper.min.js' %}"></script>
     <script src="{% static 'vendors/bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'vendors/bootstrap-select/bootstrap-select.min.js' %}"></script>
@@ -364,10 +355,47 @@
     <script src="{% static 'vendors/masonry/filter.js' %}"></script>
     <script src="{% static 'vendors/owl-carousel/owl.carousel.js' %}"></script>
     <script src="{% static 'js/functions.js' %}"></script>
-    <script src="{% static 'js/contact.js' %}"></script>
+
     <script src="{% static 'vendors/switcher/switcher.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#contact-form').submit(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
 
+            var form = $(this);
+            var btn = form.find('.btn-send');
+
+            if (btn.prop('disabled')) return false;
+            btn.val('Sending...').prop('disabled', true);
+
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (response) {
+                    var html = $(response);
+                    $('.messages').empty();
+                    if (html.find('.alert-success').length) {
+                        $('.messages').html('<div class="alert alert-success">Your message was sent successfully!</div>');
+                        form[0].reset();
+                    } else {
+                        $('#contact-form').html(html.find('#contact-form').html());
+                    }
+                    btn.val('Send message').prop('disabled', false);
+                },
+                error: function () {
+                    $('.messages').html('<div class="alert alert-danger">Something went wrong. Please try again.</div>');
+                    btn.val('Send message').prop('disabled', false);
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
 </body>
+
 
 </html>

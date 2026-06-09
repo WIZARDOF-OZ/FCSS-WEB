@@ -370,7 +370,7 @@
 		/* Set Bootstrap Drop Down */
 		var setBootstrapDropDown = function () {
 			if (!checkSelectorExistence('select')) { return; }
-			jQuery('select').selectpicker();
+			jQuery('select').not('#form_need').selectpicker();
 		}
 
 		/* set Countdown */
