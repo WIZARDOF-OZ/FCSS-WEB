@@ -155,5 +155,5 @@ def gallery(request):
     gallery_images = list(GalleryItem.objects.all())
     return render(request, 'gallery.html', {
         'distinct_categories': distinct_categories,
-        'gallery': gallery_images
+        'gallery_images': gallery_images,  #  fixed
     })
