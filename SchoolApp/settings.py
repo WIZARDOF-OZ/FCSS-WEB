@@ -7,9 +7,9 @@ load_dotenv()  # load .env file into environment variables
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
-    DEBUG=(bool, True)  # default DEBUG to False for safety
+    DEBUG=(bool, True)
 )
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))  # explicit path to .env
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-f&cezp*&k=yu$&2$2*zmaqf85uyz$v!)o-&9*d7yjp2)*5o=&7')
@@ -19,30 +19,22 @@ DEBUG = env.bool('DEBUG', default=True)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
-# Application definition
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',              #  before staticfiles
     'django.contrib.staticfiles',
-    'App',
-    'cloudinary_storage',
     'cloudinary',
+    'App',
 ]
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': env('CLOUDINARY_API_KEY'),
-    'API_SECRET': env('CLOUDINARY_API_SECRET'),
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',  # must be first
-    'whitenoise.middleware.WhiteNoiseMiddleware',     # right after SecurityMiddleware
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,12 +65,11 @@ WSGI_APPLICATION = 'SchoolApp.wsgi.application'
 
 CSRF_TRUSTED_ORIGINS = ['https://fcss-web.onrender.com']
 
-
-# Database — uses DATABASE_URL env var in production, SQLite locally
+# Database
 DATABASES = {
     'default': env.db(
-        'DATABASE_URL',                              # looks for this env variable
-        default=f'sqlite:///{BASE_DIR}/db.sqlite3'  # uses this if DATABASE_URL not set
+        'DATABASE_URL',
+        default=f'sqlite:///{BASE_DIR}/db.sqlite3'
     )
 }
 
@@ -94,7 +85,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'  # fixed for Assam/India
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
@@ -103,7 +94,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 
 # Media files
 MEDIA_URL = '/media/'
