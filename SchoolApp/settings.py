@@ -2,6 +2,9 @@ from pathlib import Path
 import os
 import environ
 
+from dotenv import load_dotenv
+load_dotenv()  # load .env file into environment variables
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
