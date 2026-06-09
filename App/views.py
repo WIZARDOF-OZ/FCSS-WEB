@@ -128,6 +128,7 @@ Message :
             return render(request, 'contact.html', {'success': True})
 
         except Exception as e:
+            print(f"EMAIL ERROR: {e}") # render logs error
             cache.delete(cache_key)  # clear so they can retry
             return render(request, 'contact.html', {
                 'error': 'Something went wrong. Please try again later.',
