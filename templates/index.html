@@ -601,7 +601,7 @@
                             <!-- BUG FIX 2: was src='/media/{{banner_images.image}}' — wrong, banner_images is a list -->
                             {% if banner_images %}
                             <img
-                              src="{{ banner_images.0.image.url }}"
+                              src="{{ banner_images.1.image.url }}"
                               width="700"
                               height="450"
                               alt="{{ banner_images.0.alt_text }}"
@@ -733,9 +733,9 @@
                             style="border-width: 0px"
                           >
                             <!-- BUG FIX 3: same wrong pattern as above -->
-                            {% if banner_images %}
+                            {% if about %}
                             <img
-                              src="{{ banner_images.0.image.url }}"
+                              src="{{ about.0.principal_image.url }}"
                               width="600"
                               height="200"
                               alt="{{ banner_images.0.alt_text }}"
