@@ -31,7 +31,7 @@ class Banner(models.Model):
     add_date =models.DateTimeField(auto_now_add=True, null=True)
     
     def image_tag(self):
-        return format_html(f'<img src="/media/{self.image}" style="width: 100px;" />')
+        return format_html('<img src="{}" style="width: 100px;" />', self.image.url)
     # preview_image = models.ImageField(upload_to='banner_images/previews/', editable=True)
     
     def __str__(self) -> str:
