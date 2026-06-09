@@ -1351,20 +1351,13 @@
             {% for item in gallery_items %}
             <div class="col-md-4 col-sm-6 m-b30">
               <div class="ov-box">
-                {% if item.photo %}
                 <img
                   src="{{ item.photo.url }}"
                   alt="{{ item.subtitle }}"
                   class="img-fluid"
                   style="width: 100%; height: 250px; object-fit: cover"
                 />
-                {% elif item.video %}
-                <video
-                  src="{{ item.video.url }}"
-                  controls
-                  style="width: 100%; height: 250px; object-fit: cover"
-                ></video>
-                {% endif %} {% if item.subtitle %}
+                {% if item.subtitle %}
                 <p class="text-center mt-2">{{ item.subtitle }}</p>
                 {% endif %}
               </div>
