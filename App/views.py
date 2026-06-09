@@ -2,67 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.core.cache import cache
 from App.models import Banner, About, GalleryItem
-import threading
 import hashlib
-
-
-def send_emails_async(subject, body, from_email, to_email, reply_to, name, need, message, confirmation_to):
-    import django
-    try:
-        from django.core.mail import EmailMessage as DjangoEmailMessage
-        print(f"ATTEMPTING EMAIL TO: {to_email}")
-        print(f"FROM: {from_email}")
-        from django.core.mail import EmailMessage as DjangoEmailMessage
-
-        # Email to school
-        mail = DjangoEmailMessage(
-            subject=subject,
-            body=body,
-            from_email=from_email,
-            to=[to_email],
-            reply_to=[reply_to],
-        )
-        mail.send(fail_silently=False)
-        print("SCHOOL EMAIL SENT SUCCESSFULLY")
-        # Confirmation email to submitter
-        confirmation_html = f"""
-<html>
-<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
-    <div style="text-align: center; padding: 20px 0; background-color: #f8a800;">
-        <h2 style="color: white; margin: 0;">Fatima Convent Senior Secondary School</h2>
-        <p style="color: white; margin: 5px 0;">Fatima Nagar, Bongaon, Rangia, Assam</p>
-    </div>
-    <div style="padding: 30px; background-color: #fff; border: 1px solid #eee;">
-        <p>Dear <strong>{name}</strong>,</p>
-        <p>Thank you for contacting <strong>Fatima Convent Senior Secondary School</strong>.</p>
-        <p>We have received your message regarding <strong>"{need}"</strong> and will get back to you shortly.</p>
-        <div style="background-color: #f9f9f9; border-left: 4px solid #f8a800; padding: 15px; margin: 20px 0;">
-            <p style="margin: 0;"><strong>Your message:</strong></p>
-            <p style="margin: 10px 0 0 0;">{message}</p>
-        </div>
-        <p style="color: #999; font-size: 12px;">This is an automated confirmation. Please do not reply to this email.</p>
-    </div>
-    <div style="text-align: center; padding: 15px; background-color: #333; color: white; font-size: 12px;">
-        <p style="margin: 0;">Fatima Convent Senior Secondary School</p>
-        <p style="margin: 5px 0;">📞 +91 9954950683 | ✉️ fatimaschoolrangia@gmail.com</p>
-    </div>
-</body>
-</html>
-"""
-        confirmation = DjangoEmailMessage(
-            subject='We received your message — Fatima Convent School',
-            body=confirmation_html,
-            from_email=from_email,
-            to=[confirmation_to],
-        )
-        confirmation.content_subtype = 'html'
-        
-        confirmation.send(fail_silently=True)
-        print("CONFIRMATION EMAIL SENT SUCCESSFULLY")
-    except Exception as e:
-        import traceback
-        print(f"EMAIL ERROR: {str(e)}")
-        print(traceback.format_exc())
 
 
 def home(request):
@@ -134,25 +74,67 @@ Message :
 {message}
         """
 
-        # Fire email in background — don't block the request
-        thread = threading.Thread(
-            target=send_emails_async,
-            args=(
-                subject,
-                body,
-                settings.DEFAULT_FROM_EMAIL,
-                settings.EMAIL_HOST_USER,
-                email,
-                name,
-                need,
-                message,
-                email,
-            )
-        )
-        thread.daemon = True
-        thread.start()
+        confirmation_html = f"""
+<html>
+<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
+    <div style="text-align: center; padding: 20px 0; background-color: #f8a800;">
+        <h2 style="color: white; margin: 0;">Fatima Convent Senior Secondary School</h2>
+        <p style="color: white; margin: 5px 0;">Fatima Nagar, Bongaon, Rangia, Assam</p>
+    </div>
+    <div style="padding: 30px; background-color: #fff; border: 1px solid #eee;">
+        <p>Dear <strong>{name}</strong>,</p>
+        <p>Thank you for contacting <strong>Fatima Convent Senior Secondary School</strong>.</p>
+        <p>We have received your message regarding <strong>"{need}"</strong> and will get back to you shortly.</p>
+        <div style="background-color: #f9f9f9; border-left: 4px solid #f8a800; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Your message:</strong></p>
+            <p style="margin: 10px 0 0 0;">{message}</p>
+        </div>
+        <p style="color: #999; font-size: 12px;">This is an automated confirmation. Please do not reply to this email.</p>
+    </div>
+    <div style="text-align: center; padding: 15px; background-color: #333; color: white; font-size: 12px;">
+        <p style="margin: 0;">Fatima Convent Senior Secondary School</p>
+        <p style="margin: 5px 0;">📞 +91 9954950683 | ✉️ fatimaschoolrangia@gmail.com</p>
+    </div>
+</body>
+</html>
+"""
 
-        return render(request, 'contact.html', {'success': True})
+        try:
+            from django.core.mail import EmailMessage as DjangoEmailMessage
+
+            # Email to school
+            mail = DjangoEmailMessage(
+                subject=subject,
+                body=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[settings.EMAIL_HOST_USER],
+                reply_to=[email],
+            )
+            mail.send(fail_silently=False)
+            print("SCHOOL EMAIL SENT SUCCESSFULLY")
+
+            # Confirmation email to submitter
+            confirmation = DjangoEmailMessage(
+                subject='We received your message — Fatima Convent School',
+                body=confirmation_html,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email],
+            )
+            confirmation.content_subtype = 'html'
+            confirmation.send(fail_silently=True)
+            print("CONFIRMATION EMAIL SENT SUCCESSFULLY")
+
+            return render(request, 'contact.html', {'success': True})
+
+        except Exception as e:
+            import traceback
+            print(f"EMAIL ERROR: {str(e)}")
+            print(traceback.format_exc())
+            cache.delete(cache_key)
+            return render(request, 'contact.html', {
+                'error': 'Something went wrong. Please try again later.',
+                'form_data': request.POST
+            })
 
     return render(request, 'contact.html')
 
