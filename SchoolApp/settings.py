@@ -56,6 +56,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'SchoolApp.wsgi.application'
 CSRF_TRUSTED_ORIGINS = ['https://fcss-web.onrender.com']
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 DATABASES = {
     'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
 }
