@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError  # ← fixed import
 from django.utils.html import format_html
+from cloudinary.models import CloudinaryField
 
 
 class About(models.Model):
@@ -67,11 +68,12 @@ class GalleryItem(models.Model):
         blank=True,
         validators=[validate_file_extension],
     )
-    video = models.FileField(
-        upload_to='gallery/videos/',
+    # ← replace FileField with CloudinaryField for video
+    video = CloudinaryField(
+        'video',
+        resource_type='video',
         null=True,
         blank=True,
-        validators=[validate_file_extension],
     )
 
     def __str__(self):
