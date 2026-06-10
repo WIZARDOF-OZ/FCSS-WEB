@@ -77,6 +77,8 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
+CONN_MAX_AGE = 60  # reuse DB connections instead of reconnecting each request
+
 # Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
