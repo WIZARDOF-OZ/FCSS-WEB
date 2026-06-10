@@ -89,6 +89,7 @@ Message :
 <html>
 <body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
     <div style="text-align: center; padding: 20px 0; background-color: #f8a800;">
+        <img src="https://fcss-web.onrender.com/static/images/icon/school__logo-removebg-preview.png" alt="School Logo" style="height: 60px; margin-bottom: 8px;"><br>
         <h2 style="color: white; margin: 0;">Fatima Convent Senior Secondary School</h2>
         <p style="color: white; margin: 5px 0;">Fatima Nagar, Bongaon, Rangia, Assam</p>
     </div>
@@ -118,7 +119,7 @@ Message :
                 subject=subject,
                 body=body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[settings.EMAIL_HOST_USER],
+                to=[settings.SCHOOL_EMAIL],
                 reply_to=[email],
             )
             mail.send(fail_silently=False)
