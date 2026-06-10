@@ -23,7 +23,7 @@ A Django-based school website for Fatima Convent Senior Secondary School. This w
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/MRINMOY662/Fatima-Convent-Senior-Secondary-School-.git
+git clone https://github.com/mrinmoy-hex/FCSS-WEB.git
 ```
 
 2. Navigate to the project directory:
