@@ -22,6 +22,13 @@ from django.urls import path, include
 
 handler404 = 'App.views.error_404'
 
+# Django Admin header Customization
+
+admin.site.site_header = "FCSS Administration"
+admin.site.site_title = "FCSS Admin Portal"
+admin.site.index_title = "Welcome to FCSS Admin Panel"
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('App.urls')),

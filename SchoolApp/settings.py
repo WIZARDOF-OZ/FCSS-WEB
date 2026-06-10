@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import environ
+from django.templatetags.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,6 +14,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
 INSTALLED_APPS = [
+    'unfold',                     
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,3 +130,32 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+
+# Unfold Customization
+
+UNFOLD = {
+    "SITE_TITLE": "FCSS Admin",
+    "SITE_HEADER": "FCSS Administration",
+    "SITE_URL": "/",
+    "SITE_LOGO": lambda request: static("images/icon/school__logo-removebg-preview.png"),
+    "SITE_LOGO_COLLAPSED": lambda request: static("images/icon/school__logo-removebg-preview.png"),
+    "LOGIN": {
+        "title": "FCSS Administration",
+        "description": "Welcome to FCSS Admin",
+    },
+    "COLORS": {
+        "primary": {
+            "50": "255 251 235",
+            "100": "254 243 199",
+            "200": "253 230 138",
+            "300": "252 211 77",
+            "400": "251 191 36",
+            "500": "245 158 11",
+            "600": "217 119 6",
+            "700": "180 83 9",
+            "800": "146 64 14",
+            "900": "120 53 15",
+            "950": "69 26 3",
+        },
+    },
+}
