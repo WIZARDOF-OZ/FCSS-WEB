@@ -860,7 +860,7 @@
 
   <!-- page-content END -->
 
-  <!-- GALLERY SECTION -->
+  <!-- GALLERY SECTION - shows latest 6 items, see home() in views.py to change limit -->
   <div class="section-area section-sp2">
     <div class="container">
       <div class="row">
@@ -869,31 +869,52 @@
         </div>
       </div>
       <div class="content-block">
-        {% if gallery_items %}
-        <div class="row">
+        <ul id="masonry" class="ttr-gallery-listing magnific-image row">
           {% for item in gallery_items %}
-          <div class="col-md-4 col-sm-6 m-b30">
+          <!-- each item is a GalleryItem with fields: photo, video, subtitle, category -->
+          <li class="action-card col-lg-4 col-md-4 col-sm-6 {{ item.category }}">
             <div class="ttr-box portfolio-bx">
-              <div class="ttr-media">
-                <img src="{{ item.photo.url }}" alt="{{ item.subtitle }}" class="img-fluid"
-                  style="width:100%; height:250px; object-fit:cover;" />
+              <div class="ttr-media media-ov2 media-effect">
+                {% if item.photo %}
+                <a href="{{ item.photo.url }}" class="magnific-anchor" title="{{ item.subtitle }}">
+                  <img src="{{ item.photo.url }}" alt="{{ item.subtitle }}"
+                    style="width:100%; height:250px; object-fit:cover;" />
+                </a>
+                {% elif item.video %}
+                <video src="{{ item.video.url }}" controls style="width:100%; height:250px;"></video>
+                {% endif %}
+                <div class="ov-box">
+                  <div class="overlay-icon align-m">
+                    {% if item.photo %}
+                    <a href="{{ item.photo.url }}" class="magnific-anchor" title="{{ item.subtitle }}">
+                      <i class="fa fa-search"></i>
+                    </a>
+                    {% endif %}
+                  </div>
+                  <div class="portfolio-info-bx bg-primary">
+                    <h4><a href="#">{{ item.subtitle }}</a></h4>
+                    <span>{{ item.category }}</span>
+                  </div>
+                </div>
               </div>
-              {% if item.subtitle %}
-              <p class="text-center mt-2">{{ item.subtitle }}</p>
-              {% endif %}
             </div>
-          </div>
+          </li>
+          {% empty %}
+          <li class="col-12 text-center">
+            <p>No gallery items yet.</p>
+          </li>
           {% endfor %}
-        </div>
-        {% else %}
-        <p class="text-center">No gallery items yet.</p>
-        {% endif %}
+        </ul>
+
         <div class="text-center m-t20">
           <a href="{% url 'gallery' %}" class="btn radius-xl">View More</a>
         </div>
       </div>
     </div>
   </div>
+  <!-- Gallery END -->
+
+  
   <!-- Footer -->
   <footer>
     <div class="footer-top">
