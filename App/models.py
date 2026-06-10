@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from django.utils.html import format_html
+from django.utils.html import format_html, mark_safe
 
 # Create your models here.
 class About(models.Model):
@@ -31,7 +31,10 @@ class Banner(models.Model):
     add_date =models.DateTimeField(auto_now_add=True, null=True)
     
     def image_tag(self):
-        return format_html('<img src="{}" style="width: 100px;" />', self.image.url)
+        if self.image:
+            return format_html('<img src="{}" style="width:100px;border-radius:4px;" />', self.image.url)
+        return "-"
+    image_tag.short_description = "Preview"
     # preview_image = models.ImageField(upload_to='banner_images/previews/', editable=True)
     
     def __str__(self) -> str:
@@ -65,11 +68,13 @@ class GalleryItem(models.Model):
         upload_to='gallery/photos/', 
         null=True, 
         blank=True,
+        validators=[validate_file_extension],
         )
     video = models.FileField(
         upload_to='gallery/videos/', 
         null=True, 
         blank=True,
+        validators=[validate_file_extension],
         )
 
     def __str__(self):
