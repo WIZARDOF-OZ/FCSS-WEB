@@ -2,11 +2,12 @@ from pathlib import Path
 import os
 import environ
 from django.templatetags.static import static
-SCHOOL_EMAIL = os.environ.get('SCHOOL_EMAIL')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+SCHOOL_EMAIL = os.environ.get('SCHOOL_EMAIL')
+BREVO_API_KEY = os.environ.get('BREVO_API_KEY')
 
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-f&cezp*&k=yu$&2$2*zmaqf85uyz$v!)o-&9*d7yjp2)*5o=&7')
 DEBUG = env.bool('DEBUG', default=True)

@@ -3,6 +3,9 @@ from django.conf import settings
 from django.core.cache import cache
 from App.models import Banner, About, GalleryItem
 import hashlib
+import os
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 
 
 def home(request):
@@ -112,31 +115,47 @@ Message :
 """
 
         try:
-            from django.core.mail import EmailMessage as DjangoEmailMessage
+            # Setup Brevo API client
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key['api-key'] = settings.BREVO_API_KEY
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+                sib_api_v3_sdk.ApiClient(configuration)
+            )
+
+            sender = {"email": settings.DEFAULT_FROM_EMAIL}
 
             # Email to school
-            mail = DjangoEmailMessage(
+            school_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": settings.SCHOOL_EMAIL}],
+                sender=sender,
+                reply_to={"email": email},
                 subject=subject,
-                body=body,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[settings.SCHOOL_EMAIL],
-                reply_to=[email],
+                text_content=body
             )
-            mail.send(fail_silently=False)
+            api_instance.send_transac_email(school_email)
             print("SCHOOL EMAIL SENT SUCCESSFULLY")
 
             # Confirmation email to submitter
-            confirmation = DjangoEmailMessage(
+            confirm_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": email}],
+                sender=sender,
                 subject='We received your message — Fatima Convent School',
-                body=confirmation_html,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[email],
+                html_content=confirmation_html
             )
-            confirmation.content_subtype = 'html'
-            confirmation.send(fail_silently=True)
+            api_instance.send_transac_email(confirm_email)
             print("CONFIRMATION EMAIL SENT SUCCESSFULLY")
 
             return render(request, 'contact.html', {'success': True})
+
+        except ApiException as e:
+            import traceback
+            print(f"BREVO API ERROR: {str(e)}")
+            print(traceback.format_exc())
+            cache.delete(cache_key)
+            return render(request, 'contact.html', {
+                'error': 'Something went wrong. Please try again later.',
+                'form_data': request.POST
+            })
 
         except Exception as e:
             import traceback
@@ -156,5 +175,5 @@ def gallery(request):
     gallery_images = list(GalleryItem.objects.all())
     return render(request, 'gallery.html', {
         'distinct_categories': distinct_categories,
-        'gallery_images': gallery_images,  #  fixed
+        'gallery_images': gallery_images,
     })
