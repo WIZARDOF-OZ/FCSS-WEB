@@ -119,7 +119,7 @@ Message :
                 subject=subject,
                 body=body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[settings.SCHOOL_EMAIL],
+                to=[settings.EMAIL_HOST_USER],
                 reply_to=[email],
             )
             mail.send(fail_silently=False)
