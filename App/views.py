@@ -210,18 +210,19 @@ def newsletter_subscribe(request):
         # Save new subscriber
         NewsletterSubscriber.objects.create(email=email)
 
-        # Send confirmation email
+        # Send confirmation email via Brevo SDK (same pattern as contact form)
         try:
-            from django.core.mail import EmailMessage as DjangoEmailMessage
             confirmation_html = f"""
 <html>
 <body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
     <div style="text-align: center; padding: 20px 0; background-color: #f8a800;">
+        <img src="https://fcss-web.onrender.com/static/images/icon/school__logo-removebg-preview.png"
+             alt="School Logo" style="height: 60px; margin-bottom: 8px;"><br>
         <h2 style="color: white; margin: 0;">Fatima Convent Senior Secondary School</h2>
         <p style="color: white; margin: 5px 0;">Fatima Nagar, Bongaon, Rangia, Assam</p>
     </div>
     <div style="padding: 30px; background-color: #fff; border: 1px solid #eee;">
-        <h3>You're subscribed!</h3>
+        <h3>You're subscribed! 🎉</h3>
         <p>Thank you for subscribing to the Fatima Convent School newsletter.</p>
         <p>You'll receive updates about upcoming events, news, and announcements from our school.</p>
         <p style="color: #999; font-size: 12px;">If you did not subscribe, please ignore this email.</p>
@@ -233,14 +234,23 @@ def newsletter_subscribe(request):
 </body>
 </html>
 """
-            confirmation = DjangoEmailMessage(
-                subject='Newsletter Subscription Confirmed — Fatima Convent School',
-                body=confirmation_html,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[email],
+            # Use Brevo SDK directly — Django's SMTP backend can silently fail on Render
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key['api-key'] = settings.BREVO_API_KEY
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+                sib_api_v3_sdk.ApiClient(configuration)
             )
-            confirmation.content_subtype = 'html'
-            confirmation.send(fail_silently=True)
+            confirm_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": email}],
+                sender={"email": settings.DEFAULT_FROM_EMAIL},
+                subject='Newsletter Subscription Confirmed — Fatima Convent School',
+                html_content=confirmation_html,
+            )
+            api_instance.send_transac_email(confirm_email)
+            print("NEWSLETTER CONFIRMATION EMAIL SENT SUCCESSFULLY")
+        except ApiException as e:
+            # Log but don't block the success response — subscriber is already saved
+            print(f"NEWSLETTER EMAIL ERROR (Brevo): {str(e)}")
         except Exception as e:
             print(f"NEWSLETTER EMAIL ERROR: {str(e)}")
 
