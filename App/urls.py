@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import path
 from . import views
-    
+
     
 urlpatterns = [
     # path('home/', home)
@@ -25,6 +25,7 @@ urlpatterns = [
     path('error-404/', views.error_404, name='error-404'),
     path('contact/', views.contact, name='contact'),
     path('gallery/', views.gallery, name='gallery'),
-    
+    path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter-subscribe'),
+
     # Add more URL patterns for other pages/views as needed
 ]

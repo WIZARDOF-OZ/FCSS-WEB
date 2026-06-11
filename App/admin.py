@@ -20,7 +20,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from unfold.admin import ModelAdmin
 from .models import Dashboard, Banner, GalleryItem, About
-
+from App.models import NewsletterSubscriber
 
 # Unregister default User and re-register with Unfold
 admin.site.unregister(User)
@@ -51,3 +51,10 @@ class AboutAdmin(ModelAdmin):
 
 admin.site.register(Dashboard, DashboardAdmin)
 admin.site.register(Banner, CategoryAdmin)
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ['email', 'subscribed_at', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['email']
+    readonly_fields = ['subscribed_at']
