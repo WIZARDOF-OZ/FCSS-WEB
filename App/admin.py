@@ -14,7 +14,7 @@ import csv
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
-# ── Auth ────────────────────────────────────────────────────────────────────
+#   Auth        ─
 admin.site.unregister(User)
 
 @admin.register(User)
@@ -22,7 +22,7 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
     pass
 
 
-# ── Existing models ──────────────────────────────────────────────────────────
+#   Existing models   ─
 class CategoryAdmin(ModelAdmin):
     list_display = ('image_tag', 'title', 'add_date')
     search_fields = ('title',)
@@ -46,7 +46,7 @@ admin.site.register(Dashboard, DashboardAdmin)
 admin.site.register(Banner, CategoryAdmin)
 
 
-# ── Brevo helpers ────────────────────────────────────────────────────────────
+#   Brevo helpers    ─
 def _send_brevo_email(to_email, subject, html_content):
     """Send a single transactional email through Brevo. Returns (success, error_msg)."""
     try:
@@ -96,7 +96,7 @@ def _build_newsletter_html(subject, body_html):
 """
 
 
-# ── Newsletter Admin ─────────────────────────────────────────────────────────
+#   Newsletter Admin   
 # FIX 1: Inherit from Unfold's ModelAdmin so the Unfold theme + templates work.
 @admin.register(NewsletterSubscriber)
 class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
@@ -118,7 +118,7 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         'export_as_csv',
     ]
 
-    # ── Coloured status badge ────────────────────────────────────────────────
+    #   Coloured status badge                         
     def status_badge(self, obj):
         if obj.is_active:
             return format_html(
@@ -131,7 +131,7 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         )
     status_badge.short_description = 'Status'
 
-    # ── Extra URLs ───────────────────────────────────────────────────────────
+    #   Extra URLs    
     def get_urls(self):
         urls = super().get_urls()
         custom = [
@@ -143,7 +143,7 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         ]
         return custom + urls
 
-    # ── Compose page (send to ALL active, or a session-stored selection) ────
+    #   Compose page (send to ALL active, or a session-stored selection)   
     def compose_email_view(self, request):
         # Are we in "selection" mode? Read IDs stored by send_email_to_selected.
         is_selection  = request.GET.get('selection') == '1'
@@ -226,7 +226,7 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         }
         return render(request, 'admin/newsletter_compose.html', context)
 
-    # ── Bulk action: send email to selected ─────────────────────────────────
+    #   Bulk action: send email to selected                 ─
     # FIX 2: Bulk actions cannot return a rendered page directly — Django ignores
     # the return value unless it's an HttpResponse.  Store selected IDs in the
     # session and redirect to the compose page, which reads them back.
@@ -237,22 +237,22 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         return HttpResponseRedirect('compose/?selection=1')
     send_email_to_selected.short_description = '📧 Send email to selected subscribers'
 
-    # ── Compose page also handles "selection" mode ───────────────────────────
+    #   Compose page also handles "selection" mode              ─
     # (Override already present above — we patch compose_email_view to read session)
 
-    # ── Bulk: deactivate ─────────────────────────────────────────────────────
+    #   Bulk: deactivate                           ─
     def deactivate_selected(self, request, queryset):
         count = queryset.update(is_active=False)
         messages.success(request, f'{count} subscriber(s) deactivated.')
     deactivate_selected.short_description = '🔴 Deactivate selected subscribers'
 
-    # ── Bulk: activate ───────────────────────────────────────────────────────
+    #   Bulk: activate  
     def activate_selected(self, request, queryset):
         count = queryset.update(is_active=True)
         messages.success(request, f'{count} subscriber(s) activated.')
     activate_selected.short_description = '🟢 Activate selected subscribers'
 
-    # ── Bulk: export CSV ─────────────────────────────────────────────────────
+    #   Bulk: export CSV                           ─
     def export_as_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="newsletter_subscribers.csv"'
@@ -263,7 +263,7 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         return response
     export_as_csv.short_description = '📥 Export selected as CSV'
 
-    # ── Inject "Compose Newsletter" button on changelist ────────────────────
+    #   Inject "Compose Newsletter" button on changelist           
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context['compose_url']    = 'compose/'
