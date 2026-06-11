@@ -15,7 +15,9 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
 INSTALLED_APPS = [
-    'unfold',                     
+    'unfold',   
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",                  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -140,6 +142,8 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 # Unfold Customization
 
 UNFOLD = {
+    "STYLES": [],
+    "SCRIPTS": [],
     "SITE_TITLE": "FCSS Admin",
     "SITE_HEADER": "FCSS Administration",
     "SITE_URL": "/",

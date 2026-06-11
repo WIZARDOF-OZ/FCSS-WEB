@@ -5,19 +5,17 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="keywords"
-      content="Fatima Convent Senior Secondary School Rangia, Fatima Convent School, Fatima Convent School Rangia"
-    />
     <meta name="author" content="Tensor_Block" />
-    <meta name="robots" content="" />
     <meta
       property="og:image"
       name="description"
       content="Fatima Convent Senior Secondary"
     />
     <meta property="og:title" content="Fatima Convent Senior Secondary" />
-    <meta property="og:description" content="Fatima Convent Senior Secondary" />
+    <meta
+      property="og:description"
+      content="Official Website of Fatima Convent Senior Secondary School."
+    />
     <meta property="og:image" content="" />
     <meta name="format-detection" content="telephone=no" />
 
@@ -83,6 +81,20 @@
       .alignleft {
         float: left;
         margin: 5px 20px 20px 0;
+      }
+
+      @keyframes tickerScroll {
+        0% {
+          transform: translateY(0);
+        }
+
+        100% {
+          transform: translateY(-50%);
+        }
+      }
+
+      #newsTicker:hover {
+        animation-play-state: paused;
       }
     </style>
   </head>
@@ -868,27 +880,32 @@
                         <div
                           class="gdlr-core-widget-item gdlr-core-item-pdlr gdlr-core-item-pdb"
                         >
-                          <div
-                            class="widget SP_News_scrolling_Widget kingster-widget"
-                          >
-                            <div class="recent-news-items-scroll no_p">
-                              <div
-                                class="sp-news-scrolling-slider"
-                                data-conf='{"height":230,"pause":2000,"speed":500}'
-                              >
-                                <ul>
-                                  <li class="news_li">
-                                    <a
-                                      class="newspost-title"
-                                      href="{% url 'error-404' %}"
-                                      title="Event List – JANUARY 2023"
-                                      >Event List – JANUARY 2023</a
-                                    >
+                        
+                        <!-- --------------------------------------------------- -->
+                          <div style="height: 230px; overflow: hidden; position: relative; padding: 0 40px;">
+                              <ul id="newsTicker" style="
+                                  list-style: none;
+                                  padding: 0;
+                                  margin: 0;
+                                  position: absolute;
+                                  width: calc(100% - 80px);
+                              ">
+                                  {% for news in news_updates %}
+                                  <li class="ticker-item" style="padding: 10px 0; border-bottom: 1px dashed #e4e4e4;">
+                                      <span style="font-size: 11px; color: #999;">{{ news.date|date:"d M Y" }}</span><br>
+                                      <a href="{{ news.link|default:'#' }}"
+                                        style="font-size: 14px; color: #303030; text-decoration: none; font-family: Rubik, sans-serif;"
+                                        onmouseover="this.style.color='#f3d5aa'"
+                                        onmouseout="this.style.color='#303030'">
+                                          {{ news.title }}
+                                      </a>
                                   </li>
-                                </ul>
-                              </div>
-                            </div>
+                                  {% empty %}
+                                  <li style="padding: 10px 0; color: #999; font-size: 14px;">No updates yet.</li>
+                                  {% endfor %}
+                              </ul>
                           </div>
+                          <!-- ---------------------------------------------- -->
                         </div>
                       </div>
                     </div>
@@ -1689,6 +1706,46 @@
             });
         }
       });
+    </script>
+
+    <script>
+      (function () {
+        var ticker = document.getElementById("newsTicker");
+        if (!ticker) return;
+
+        var items = ticker.querySelectorAll(".ticker-item");
+        if (items.length === 0) return;
+
+        // Clone all items for seamless loop
+        items.forEach(function (item) {
+          ticker.appendChild(item.cloneNode(true));
+        });
+
+        var pos = 0;
+        var paused = false;
+        var itemHeight = items[0].offsetHeight + 1; // +1 for border
+
+        ticker.parentElement.addEventListener("mouseenter", function () {
+          paused = true;
+        });
+        ticker.parentElement.addEventListener("mouseleave", function () {
+          paused = false;
+        });
+
+        function tick() {
+          if (!paused) {
+            pos += 0.5;
+            // Reset when first set is scrolled past
+            if (pos >= itemHeight * items.length) {
+              pos = 0;
+            }
+            ticker.style.transform = "translateY(-" + pos + "px)";
+          }
+          requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      })();
     </script>
   </body>
 </html>

@@ -9,7 +9,10 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.urls import path
 from django.utils.html import format_html
+from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from django.conf import settings
+from .models import NewsUpdate
+
 import csv
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
@@ -20,6 +23,12 @@ admin.site.unregister(User)
 @admin.register(User)
 class CustomUserAdmin(UserAdmin, ModelAdmin):
     pass
+
+# Unfold config
+
+class BaseAdmin(UnfoldModelAdmin):
+    compressed_fields = False  # gives fields more breathing room
+    warn_unsaved_changes = True
 
 
 #   Existing models   ─
@@ -270,3 +279,12 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         extra_context['active_count']   = NewsletterSubscriber.objects.filter(is_active=True).count()
         extra_context['inactive_count'] = NewsletterSubscriber.objects.filter(is_active=False).count()
         return super().changelist_view(request, extra_context=extra_context)
+    
+
+
+# New&Update
+@admin.register(NewsUpdate)
+class NewsUpdateAdmin(BaseAdmin):
+    list_display = ['title', 'date', 'is_active']
+    list_editable = ['is_active']
+    list_display_links = ['title'] 

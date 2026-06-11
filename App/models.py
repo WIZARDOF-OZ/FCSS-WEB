@@ -91,3 +91,16 @@ class NewsletterSubscriber(models.Model):
     class Meta:
         verbose_name = 'Newsletter Subscriber'
         verbose_name_plural = 'Newsletter Subscribers'
+
+# New&Update section :)
+class NewsUpdate(models.Model):
+    title = models.CharField(max_length=255)
+    link = models.URLField(blank=True, null=True)
+    date = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-date']

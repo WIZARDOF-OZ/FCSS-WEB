@@ -7,8 +7,13 @@ import os
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from django.http import JsonResponse
+from .models import NewsUpdate
 import re
+
+
+
 def home(request):
+    news_updates = NewsUpdate.objects.filter(is_active=True)
     banner_images = list(Banner.objects.all())
     gallery_items = list(GalleryItem.objects.all()[:6])
     facilities = [
@@ -21,6 +26,7 @@ def home(request):
         'banner_images': banner_images,
         'gallery_items': gallery_items,
         'facilities': facilities,
+        'news_updates': news_updates,
     })
 
 
