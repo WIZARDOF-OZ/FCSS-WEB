@@ -1,0 +1,185 @@
+{% extends "admin/base_site.html" %} {% block content %}
+
+<style>
+  .nl-card {
+    background: #1e2430;
+    border: 1px solid #2e3a4e;
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+  .nl-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .nl-stat {
+    background: #2a3347;
+    border-radius: 8px;
+    padding: 14px 22px;
+    flex: 1;
+    text-align: center;
+  }
+  .nl-stat .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: #f8a800;
+  }
+  .nl-stat .lbl {
+    font-size: 12px;
+    color: #8a9bb5;
+    margin-top: 4px;
+  }
+  label {
+    font-weight: 600;
+    color: #c5cfe0;
+    display: block;
+    margin-bottom: 6px;
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    background: #111827;
+    border: 1px solid #2e3a4e;
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: #e0e8f5;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  textarea {
+    min-height: 220px;
+    font-family: monospace;
+    resize: vertical;
+  }
+  .nl-hint {
+    font-size: 12px;
+    color: #5a6a80;
+    margin-top: -16px;
+    margin-bottom: 20px;
+  }
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-send {
+    background: #f8a800;
+    color: #111;
+    border: none;
+    padding: 11px 28px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .btn-send:hover {
+    background: #e09700;
+  }
+  .btn-preview {
+    background: #2a3347;
+    color: #c5cfe0;
+    border: 1px solid #3e4f68;
+    padding: 11px 22px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .btn-preview:hover {
+    background: #354060;
+  }
+  .btn-back {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #8a9bb5;
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .btn-back:hover {
+    color: #f8a800;
+  }
+  .nl-warning {
+    background: #3b2a10;
+    border: 1px solid #f8a800;
+    border-radius: 6px;
+    padding: 12px 18px;
+    color: #f8c94a;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+</style>
+
+<a class="btn-back" href="../">← Back to subscriber list</a>
+
+<h2 style="color: #e0e8f5; margin-bottom: 20px">
+  {% if is_selection %} 📧 Send Email to {{ total_count }} Selected
+  Subscriber(s) {% else %} 📧 Compose Newsletter {% endif %}
+</h2>
+
+<!-- Stats -->
+<div class="nl-stats">
+  <div class="nl-stat">
+    <div class="num">{{ active_count }}</div>
+    <div class="lbl">
+      {% if is_selection %}Selected Active{% else %}Active Subscribers{% endif
+      %}
+    </div>
+  </div>
+  <div class="nl-stat">
+    <div class="num">{{ total_count }}</div>
+    <div class="lbl">
+      {% if is_selection %}Total Selected{% else %}Total Subscribers{% endif %}
+    </div>
+  </div>
+</div>
+
+{% if not is_selection %}
+<div class="nl-warning">
+  ⚠️ This will send to
+  <strong>all {{ active_count }} active subscribers</strong>. Double-check
+  before sending.
+</div>
+{% endif %}
+
+<div class="nl-card">
+  <form method="post">
+    {% csrf_token %} {% if is_selection %} {% for sid in selected_ids %}
+    <input type="hidden" name="selected_ids" value="{{ sid }}" />
+    {% endfor %} {% endif %}
+
+    <label for="subject">Subject Line</label>
+    <input
+      type="text"
+      id="subject"
+      name="subject"
+      placeholder="e.g. Important School Update — June 2026"
+      required
+    />
+
+    <label for="body_html">Email Body (HTML supported)</label>
+    <textarea
+      id="body_html"
+      name="body_html"
+      placeholder='Write your message here...&#10;&#10;You can use basic HTML tags like &lt;p&gt;, &lt;b&gt;, &lt;ul&gt;, &lt;a href="..."&gt; etc.'
+      required
+    ></textarea>
+    <p class="nl-hint">
+      Tip: The school header &amp; footer are added automatically — just write
+      the main content.
+    </p>
+
+    <div class="btn-row">
+      <button type="submit" name="send_newsletter" class="btn-send">
+        📤 Send Newsletter
+      </button>
+      <button type="submit" name="preview_only" value="1" class="btn-preview">
+        👁 Preview Email
+      </button>
+    </div>
+  </form>
+  {% endif %}
+</div>
+
+{% endblock %}

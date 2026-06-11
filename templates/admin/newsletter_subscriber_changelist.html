@@ -1,0 +1,35 @@
+{% extends "admin/change_list.html" %} {% block object-tools-items %} {{
+block.super }}
+<li>
+  <a
+    href="{{ compose_url }}"
+    class="button"
+    style="
+      background: #f8a800;
+      color: #111;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    "
+  >
+    📧 Compose Newsletter {% if active_count %}
+    <span
+      style="
+        background: #111;
+        color: #f8a800;
+        border-radius: 10px;
+        padding: 1px 8px;
+        font-size: 11px;
+        font-weight: 700;
+      "
+      >{{ active_count }} active</span
+    >
+    {% endif %}
+  </a>
+</li>
+{% endblock %}
