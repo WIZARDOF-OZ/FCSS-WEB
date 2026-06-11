@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.core.cache import cache
-from App.models import Banner, About, GalleryItem
+from App.models import Banner, About, GalleryItem, NewsletterSubscriber
 import hashlib
 import os
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
-
-
+from django.http import JsonResponse
+import re
 def home(request):
     banner_images = list(Banner.objects.all())
     gallery_items = list(GalleryItem.objects.all()[:6])
@@ -177,3 +177,76 @@ def gallery(request):
         'distinct_categories': distinct_categories,
         'gallery_images': gallery_images,
     })
+    
+def newsletter_subscribe(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+
+        # Validate email format
+        email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not email or not re.match(email_regex, email):
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Please enter a valid email address.'
+            })
+
+        # Check if already subscribed
+        if NewsletterSubscriber.objects.filter(email=email).exists():
+            subscriber = NewsletterSubscriber.objects.get(email=email)
+            if subscriber.is_active:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'This email is already subscribed!'
+                })
+            else:
+                # Reactivate if they had unsubscribed
+                subscriber.is_active = True
+                subscriber.save()
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Welcome back! You have been resubscribed.'
+                })
+
+        # Save new subscriber
+        NewsletterSubscriber.objects.create(email=email)
+
+        # Send confirmation email
+        try:
+            from django.core.mail import EmailMessage as DjangoEmailMessage
+            confirmation_html = f"""
+<html>
+<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
+    <div style="text-align: center; padding: 20px 0; background-color: #f8a800;">
+        <h2 style="color: white; margin: 0;">Fatima Convent Senior Secondary School</h2>
+        <p style="color: white; margin: 5px 0;">Fatima Nagar, Bongaon, Rangia, Assam</p>
+    </div>
+    <div style="padding: 30px; background-color: #fff; border: 1px solid #eee;">
+        <h3>You're subscribed!</h3>
+        <p>Thank you for subscribing to the Fatima Convent School newsletter.</p>
+        <p>You'll receive updates about upcoming events, news, and announcements from our school.</p>
+        <p style="color: #999; font-size: 12px;">If you did not subscribe, please ignore this email.</p>
+    </div>
+    <div style="text-align: center; padding: 15px; background-color: #333; color: white; font-size: 12px;">
+        <p style="margin: 0;">Fatima Convent Senior Secondary School</p>
+        <p style="margin: 5px 0;">📞 +91 9954950683 | ✉️ fatimaschoolrangia@gmail.com</p>
+    </div>
+</body>
+</html>
+"""
+            confirmation = DjangoEmailMessage(
+                subject='Newsletter Subscription Confirmed — Fatima Convent School',
+                body=confirmation_html,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email],
+            )
+            confirmation.content_subtype = 'html'
+            confirmation.send(fail_silently=True)
+        except Exception as e:
+            print(f"NEWSLETTER EMAIL ERROR: {str(e)}")
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Thank you for subscribing!'
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
