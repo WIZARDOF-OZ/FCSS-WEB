@@ -388,34 +388,28 @@
                 <div class="widget">
                   <h5 class="footer-title">Sign Up For A Newsletter</h5>
                   <p class="text-capitalize m-b20">
-                    Weekly breaking news analysis and cutting edge advice on job
-                    searching.
+                    Weekly breaking news, events and announcements from Fatima
+                    Convent School.
                   </p>
+                  <div
+                    class="newsletter-message"
+                    id="newsletter-message"
+                    style="display: none; margin-bottom: 10px"
+                  ></div>
                   <div class="subscribe-form m-b20">
-                    <!-- BUG FIX 3: was pointing to dead external URL -->
-                    <form class="subscription-form" action="" method="post">
-                      {% csrf_token %}
-                      <div class="ajax-message"></div>
-                      <div class="input-group">
-                        <input
-                          name="email"
-                          required
-                          class="form-control"
-                          placeholder="Your Email Address"
-                          type="email"
-                        />
-                        <span class="input-group-btn">
-                          <button
-                            name="submit"
-                            value="Submit"
-                            type="submit"
-                            class="btn"
-                          >
-                            <i class="fa fa-arrow-right"></i>
-                          </button>
-                        </span>
-                      </div>
-                    </form>
+                    <div class="input-group">
+                      <input
+                        id="newsletter-email"
+                        type="email"
+                        class="form-control"
+                        placeholder="Your Email Address"
+                      />
+                      <span class="input-group-btn">
+                        <button id="newsletter-btn" type="button" class="btn">
+                          <i class="fa fa-arrow-right"></i>
+                        </button>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -434,22 +428,13 @@
                   <div class="col-4 col-lg-4 col-md-4 col-sm-4">
                     <div class="widget footer_widget">
                       <h5 class="footer-title">Get In Touch</h5>
-                      <!-- BUG FIX 6: gallery/login were linking to error-404 -->
                       <ul>
-                        <li><a href="#">Login</a></li>
+                        <li><a href="{% url 'contact' %}">Login</a></li>
                         <li><a href="{% url 'gallery' %}">Gallery</a></li>
                         <li><a href="{% url 'error-404' %}">Event</a></li>
                       </ul>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="col-12 col-lg-3 col-md-5 col-sm-12 footer-col-4">
-                <div class="widget widget_gallery gallery-grid-4">
-                  <h5 class="footer-title">Our Gallery</h5>
-                  <ul class="magnific-image">
-                    <!-- Gallery images can be added here when available -->
-                  </ul>
                 </div>
               </div>
             </div>
@@ -487,5 +472,79 @@
     <script src="{% static 'vendors/owl-carousel/owl.carousel.js' %}"></script>
     <script src="{% static 'js/functions.js' %}"></script>
     <script src="{% static 'js/contact.js' %}"></script>
+    <script>
+      $(document).ready(function () {
+        $("#newsletter-btn").on("click", function () {
+          var email = $("#newsletter-email").val().trim();
+          var msgBox = $("#newsletter-message");
+          var btn = $(this);
+
+          if (!email) {
+            msgBox
+              .html(
+                '<div class="alert alert-danger" style="padding:8px;">Please enter your email.</div>',
+              )
+              .show();
+            return;
+          }
+
+          btn
+            .prop("disabled", true)
+            .html('<i class="fa fa-spinner fa-spin"></i>');
+
+          $.ajax({
+            type: "POST",
+            url: "{% url 'newsletter-subscribe' %}",
+            data: {
+              email: email,
+              csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            success: function (response) {
+              if (response.status === "success") {
+                msgBox
+                  .html(
+                    '<div class="alert alert-success" style="padding:8px;">' +
+                      response.message +
+                      "</div>",
+                  )
+                  .show();
+                $("#newsletter-email").val("");
+              } else {
+                msgBox
+                  .html(
+                    '<div class="alert alert-danger" style="padding:8px;">' +
+                      response.message +
+                      "</div>",
+                  )
+                  .show();
+              }
+              btn
+                .prop("disabled", false)
+                .html('<i class="fa fa-arrow-right"></i>');
+
+              // Hide message after 4 seconds
+              setTimeout(function () {
+                msgBox.hide();
+              }, 4000);
+            },
+            error: function () {
+              msgBox
+                .html(
+                  '<div class="alert alert-danger" style="padding:8px;">Something went wrong. Please try again.</div>',
+                )
+                .show();
+              btn
+                .prop("disabled", false)
+                .html('<i class="fa fa-arrow-right"></i>');
+            },
+          });
+        });
+
+        // Also trigger on Enter key
+        $("#newsletter-email").on("keypress", function (e) {
+          if (e.which === 13) $("#newsletter-btn").click();
+        });
+      });
+    </script>
   </body>
 </html>

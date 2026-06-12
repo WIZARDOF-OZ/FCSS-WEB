@@ -279,7 +279,48 @@ class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
         extra_context['active_count']   = NewsletterSubscriber.objects.filter(is_active=True).count()
         extra_context['inactive_count'] = NewsletterSubscriber.objects.filter(is_active=False).count()
         return super().changelist_view(request, extra_context=extra_context)
-    
+    def save_model(self, request, obj, form, change):
+         is_new = obj.pk is None
+         super().save_model(request, obj, form, change)
+        
+         if is_new:
+            try:
+                confirmation_html = f"""
+<html>
+<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;">
+    <div style="text-align: center; padding: 20px 0; background-color: #f8a800;">
+        <img src="https://fcss-web.onrender.com/static/images/icon/school__logo-removebg-preview.png"
+             alt="School Logo" style="height: 60px; margin-bottom: 8px;"><br>
+        <h2 style="color: white; margin: 0;">Fatima Convent Senior Secondary School</h2>
+        <p style="color: white; margin: 5px 0;">Fatima Nagar, Bongaon, Rangia, Assam</p>
+    </div>
+    <div style="padding: 30px; background-color: #fff; border: 1px solid #eee;">
+        <h3>You're subscribed! 🎉</h3>
+        <p>Thank you for subscribing to the Fatima Convent School newsletter.</p>
+        <p>You'll receive updates about upcoming events, news, and announcements from our school.</p>
+        <p style="color: #999; font-size: 12px;">If you did not subscribe, please ignore this email.</p>
+    </div>
+    <div style="text-align: center; padding: 15px; background-color: #333; color: white; font-size: 12px;">
+        <p style="margin: 0;">Fatima Convent Senior Secondary School</p>
+        <p style="margin: 5px 0;">📞 +91 9954950683 | ✉️ fatimaschoolrangia@gmail.com</p>
+    </div>
+</body>
+</html>
+"""
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key['api-key'] = settings.BREVO_API_KEY
+                api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+                sib_api_v3_sdk.ApiClient(configuration)
+                )
+                confirm_email = sib_api_v3_sdk.SendSmtpEmail(
+                    to=[{"email": obj.email}],
+                    sender={"email": settings.DEFAULT_FROM_EMAIL},
+                    subject='Newsletter Subscription Confirmed — Fatima Convent School',
+                    html_content=confirmation_html,
+                )
+                api_instance.send_transac_email(confirm_email)
+            except Exception as e:
+                print(f"ADMIN NEWSLETTER EMAIL ERROR: {str(e)}")
 
 
 # New&Update
