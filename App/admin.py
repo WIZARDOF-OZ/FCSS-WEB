@@ -32,22 +32,37 @@ class BaseAdmin(UnfoldModelAdmin):
 
 
 #   Existing models   ─
-class CategoryAdmin(ModelAdmin):
+class CategoryAdmin(BaseAdmin):
     list_display = ('image_tag', 'title', 'add_date')
     search_fields = ('title',)
 
 
-class DashboardAdmin(ModelAdmin):
+class DashboardAdmin(BaseAdmin):
     list_display = ('banner_title', 'add_date')
 
 
 @admin.register(GalleryItem)
-class GalleryItemAdmin(ModelAdmin):
-    pass
+class GalleryItemAdmin(BaseAdmin):
+    list_display = ['preview', '__str__', 'category']
+    list_display_links = ['__str__']
+
+    def preview(self, obj):
+        if obj.photo:
+            return format_html(
+                '<img src="{}" style="height:60px; width:90px; object-fit:cover; border-radius:4px;" />',
+                obj.photo.url
+            )
+        elif obj.video:
+            return format_html(
+                '<video src="{}" style="height:60px; width:90px; object-fit:cover; border-radius:4px;" muted></video>',
+                obj.video.url
+            )
+        return '—'
+    preview.short_description = 'Preview'
 
 
 @admin.register(About)
-class AboutAdmin(ModelAdmin):
+class AboutAdmin(BaseAdmin):
     pass
 
 
@@ -108,7 +123,7 @@ def _build_newsletter_html(subject, body_html):
 #   Newsletter Admin   
 # FIX 1: Inherit from Unfold's ModelAdmin so the Unfold theme + templates work.
 @admin.register(NewsletterSubscriber)
-class NewsletterSubscriberAdmin(ModelAdmin):   # ← was admin.ModelAdmin
+class NewsletterSubscriberAdmin(BaseAdmin):   # 
     # Custom changelist template adds the "Compose Newsletter" button in the
     # object-tools area (top-right), consistent with Unfold's layout.
     change_list_template = 'admin/newsletter_subscriber_changelist.html'

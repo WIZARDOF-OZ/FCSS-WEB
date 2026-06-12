@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from django.core.exceptions import ValidationError  # ← fixed import
+from django.core.exceptions import ValidationError  
 from django.utils.html import format_html
 from cloudinary.models import CloudinaryField
 
@@ -78,6 +78,7 @@ class GalleryItem(models.Model):
 
     def __str__(self):
         return f"{self.category} - {self.subtitle}"
+    
 
 # Newsletter section
 class NewsletterSubscriber(models.Model):

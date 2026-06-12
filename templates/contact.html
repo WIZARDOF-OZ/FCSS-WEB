@@ -77,130 +77,89 @@
         <div class="icon"></div>
       </div>
 
-      <!-- Header ==== -->
-      <header class="header rs-nav">
-        <div class="top-bar">
-          <div class="container">
-            <div class="row d-flex justify-content-between">
-              <div class="topbar-right"><ul></ul></div>
-            </div>
-          </div>
-        </div>
-        <div class="sticky-header navbar-expand-lg">
-          <div class="menu-bar clearfix">
-            <div class="container clearfix">
-              <div class="menu-logo">
-                <a href="{% url 'home' %}"
-                  ><img
-                    src="{% static 'images/icon/school__logo-removebg-preview.png' %}"
-                    alt=""
-                /></a>
-                <a href="{% url 'home' %}"
-                  ><img
-                    src="{% static 'images/icon/school_logo_White_edited-removebg-preview.png' %}"
-                    alt=""
-                /></a>
-              </div>
-              <button
-                class="navbar-toggler collapsed menuicon justify-content-end"
-                type="button"
-                data-toggle="collapse"
-                data-target="#menuDropdown"
-                aria-controls="menuDropdown"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span></span><span></span><span></span>
-              </button>
-              <div class="secondary-menu">
-                <div class="secondary-inner"><ul></ul></div>
-              </div>
-              <div
-                class="menu-links navbar-collapse collapse justify-content-start"
-                id="menuDropdown"
-              >
-                <div class="logo">
-                  <a href="{% url 'home' %}"
-                    ><img
-                      class="img-align"
-                      src="{% static 'images/icon/school_logo_White_edited-removebg-preview.png' %}"
-                      alt=""
-                      width="60"
-                  /></a>
+        <!-- Header ==== -->
+        <header class="header rs-nav">
+            <div class="top-bar">
+                <div class="container">
+                    <div class="row d-flex justify-content-between">
+                        <div class="topbar-right"><ul></ul></div>
+                    </div>
                 </div>
-                <ul class="nav navbar-nav">
-                  <li><a href="{% url 'home' %}">Home</a></li>
-                  <li>
-                    <a href="javascript:;"
-                      >Pages <i class="fa fa-chevron-down"></i
-                    ></a>
-                    <ul class="sub-menu">
-                      <li><a href="{% url 'about' %}">About</a></li>
-                      <li><a href="{% url 'error-404' %}">Event</a></li>
-                      <li><a href="{% url 'contact' %}">Contact Us</a></li>
-                      <li><a href="{% url 'error-404' %}">Fee-Structure</a></li>
-                    </ul>
-                  </li>
-                  <li><a href="{% url 'gallery' %}">Gallery</a></li>
-                  <li class="add-mega-menu">
-                    <a href="javascript:;"
-                      >Academics <i class="fa fa-chevron-down"></i
-                    ></a>
-                    <ul class="sub-menu add-menu">
-                      <li class="add-menu-left">
-                        <h5 class="menu-adv-title">Academics</h5>
-                        <ul>
-                          <li>
-                            <a href="{% url 'error-404' %}"
-                              >Admission Details</a
-                            >
-                          </li>
-                          <li>
-                            <a href="{% url 'error-404' %}">Fee Structure</a>
-                          </li>
-                          <li><a href="{% url 'error-404' %}">Result</a></li>
-                        </ul>
-                      </li>
-                      <li class="add-menu-right">
-                        <img
-                          src="{% static 'images/adv/adv.jpg' %}"
-                          alt="home_image"
-                        />
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-dashboard">
-                    <a href="javascript:;"
-                      >Administration <i class="fa fa-chevron-down"></i
-                    ></a>
-                    <ul class="sub-menu">
-                      <li class="add-menu-left">
-                        <h5 class="menu-adv-title">School Administration</h5>
-                      </li>
-                      <li>
-                        <a href="{% url 'error-404' %}">School Committee</a>
-                      </li>
-                      <li><a href="{% url 'error-404' %}">Staff Details</a></li>
-                      <li><a href="{% url 'error-404' %}">Staff Vacancy</a></li>
-                      <li><a href="{% url 'error-404' %}">Review</a></li>
-                      <li>
-                        <a href="{% url 'error-404' %}">Teacher Profile</a>
-                      </li>
-                      <li><a href="{% url 'error-404' %}">User Profile</a></li>
-                    </ul>
-                  </li>
-                </ul>
-                <div class="nav-social-link">
-                  <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                  <a href="javascript:;"><i class="fa fa-google-plus"></i></a>
-                  <a href="javascript:;"><i class="fa fa-linkedin"></i></a>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </header>
-      <!-- Header END ==== -->
+            <div class="sticky-header navbar-expand-lg">
+                <div class="menu-bar clearfix">
+                    <div class="container clearfix">
+                        <div class="menu-logo">
+                            <a href="{% url 'home' %}"><img src="{% static 'images/icon/school__logo-removebg-preview.png' %}" alt=""></a>
+                            <a href="{% url 'home' %}"><img src="{% static 'images/icon/school_logo_White_edited-removebg-preview.png' %}" alt=""></a>
+                        </div>
+                        <button class="navbar-toggler collapsed menuicon justify-content-end" type="button"
+                            data-toggle="collapse" data-target="#menuDropdown" aria-controls="menuDropdown"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span></span><span></span><span></span>
+                        </button>
+                        <div class="secondary-menu">
+                            <div class="secondary-inner"><ul></ul></div>
+                        </div>
+                        <div class="menu-links navbar-collapse collapse justify-content-start" id="menuDropdown">
+                            <div class="logo">
+                                <a href="{% url 'home' %}"><img class="img-align" src="{% static 'images/icon/school_logo_White_edited-removebg-preview.png' %}" alt="" width="60"></a>
+                            </div>
+                            <ul class="nav navbar-nav">
+                                <li><a href="{% url 'home' %}">Home</a></li>
+                                <li>
+                                    <a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
+                                    <ul class="sub-menu">
+                                        <li><a href="{% url 'about' %}">About</a></li>
+                                        <li><a href="{% url 'error-404' %}">Event</a></li>
+                                        <li><a href="{% url 'gallery' %}">Gallery</a></li>
+                                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                        <li><a href="{% url 'error-404' %}">Fee-Structure</a></li>
+                                    </ul>
+                                </li>
+                                
+                                <li class="add-mega-menu">
+                                    <a href="javascript:;">Academics <i class="fa fa-chevron-down"></i></a>
+                                    <ul class="sub-menu add-menu">
+                                        <li class="add-menu-left">
+                                            <h5 class="menu-adv-title">Academics</h5>
+                                            <ul>
+                                                <li><a href="{% url 'error-404' %}">Admission Details</a></li>
+                                                <li><a href="{% url 'error-404' %}">Fee Structure</a></li>
+                                                <li><a href="{% url 'error-404' %}">Result</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="add-menu-right">
+                                            <img src="{% static 'images/adv/adv.jpg' %}" alt="home_image" />
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-dashboard">
+                                    <a href="javascript:;">Administration <i class="fa fa-chevron-down"></i></a>
+                                    <ul class="sub-menu">
+                                        <li class="add-menu-left">
+                                            <h5 class="menu-adv-title">School Administration</h5>
+                                        </li>
+                                        <li><a href="{% url 'error-404' %}">School Committee</a></li>
+                                        <li><a href="{% url 'error-404' %}">Staff Details</a></li>
+                                        <li><a href="{% url 'error-404' %}">Staff Vacancy</a></li>
+                                        <li><a href="{% url 'error-404' %}">Review</a></li>
+                                        <li><a href="{% url 'error-404' %}">Teacher Profile</a></li>
+                                        <li><a href="{% url 'error-404' %}">User Profile</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <div class="nav-social-link">
+                                <a href="javascript:;"><i class="fa fa-facebook"></i></a>
+                                <a href="javascript:;"><i class="fa fa-google-plus"></i></a>
+                                <a href="javascript:;"><i class="fa fa-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Header END ==== -->
 
       <div class="page-content bg-white">
         <div
