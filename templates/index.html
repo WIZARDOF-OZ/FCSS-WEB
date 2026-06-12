@@ -1262,11 +1262,9 @@
                                     <div class="ov-box">
                                         <div class="overlay-icon align-m">
                                             {% if item.photo %}
-                                            <a
-                                                href="{{ item.photo.url }}"
-                                                class="magnific-anchor"
-                                                title="{{ item.subtitle }}"
-                                            >
+                                            <a href="javascript:;" 
+                                            onclick="$(this).closest('.ttr-media').find('.magnific-anchor').trigger('click');"
+                                            title="{{ item.subtitle }}">
                                                 <i class="fa fa-search"></i>
                                             </a>
                                             {% endif %}
