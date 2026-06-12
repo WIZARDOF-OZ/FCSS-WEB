@@ -1,6 +1,10 @@
 {% extends "admin/base_site.html" %} {% block content %}
 
 <style>
+  body {
+    background: #1e2430;
+    color: #c5cfe0;
+  }
   .nl-card {
     background: #1e2430;
     border: 1px solid #2e3a4e;
@@ -74,9 +78,6 @@
     cursor: pointer;
     font-size: 14px;
   }
-  .btn-send:hover {
-    background: #e09700;
-  }
   .btn-preview {
     background: #2a3347;
     color: #c5cfe0;
@@ -114,8 +115,8 @@
 <a class="btn-back" href="../">← Back to subscriber list</a>
 
 <h2 style="color: #e0e8f5; margin-bottom: 20px">
-  {% if is_selection %} 📧 Send Email to {{ total_count }} Selected
-  Subscriber(s) {% else %} 📧 Compose Newsletter {% endif %}
+  {% if is_selection %} Send Email to {{ total_count }} Selected Subscriber(s)
+  {% else %} Compose Newsletter {% endif %}
 </h2>
 
 <!-- Stats -->
@@ -123,8 +124,7 @@
   <div class="nl-stat">
     <div class="num">{{ active_count }}</div>
     <div class="lbl">
-      {% if is_selection %}Selected Active{% else %}Active Subscribers{% endif
-      %}
+      {% if is_selection %}Selected Active{% else %}Active Subscribers {%endif%}
     </div>
   </div>
   <div class="nl-stat">
@@ -172,14 +172,12 @@
 
     <div class="btn-row">
       <button type="submit" name="send_newsletter" class="btn-send">
-        📤 Send Newsletter
+        Send Newsletter
       </button>
       <button type="submit" name="preview_only" value="1" class="btn-preview">
-        👁 Preview Email
+        Preview Email
       </button>
     </div>
   </form>
-  {% endif %}
 </div>
-
 {% endblock %}
