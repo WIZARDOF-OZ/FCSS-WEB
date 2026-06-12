@@ -2480,7 +2480,7 @@ button.back-to-top {
   display: inline-block;
   font-size: 13px;
   text-transform: capitalize;
-  font-family: ;
+  font-family:;
   margin-right: 5px;
 }
 
@@ -4221,11 +4221,11 @@ button.back-to-top {
 }
 
 /* About Page Banner */
-.page-banner{
+.page-banner {
   background-image: url("../images/img1.jpeg");
 }
 
 /* Infrastructure banner */
-.bg-infrastructure{
+.bg-infrastructure {
   background-image: url("../images/banner/5th.jpeg");
 }
