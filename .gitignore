@@ -21,3 +21,5 @@ __pycache__/
 
 # DB
 db.sqlite3
+
+backup
