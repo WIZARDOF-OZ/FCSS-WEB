@@ -1,170 +1,31 @@
+{% extends 'base.html' %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="keywords"
-      content="Fatima Convent School Rangia, fatimaschoolrangia, fatima convent senior secondary school"
-    />
-    <meta name="author" content="Tensor_Block" />
-    <meta name="robots" content="" />
-    <meta name="description" content="Fatima Convent Senior Secondary" />
-    <meta property="og:title" content="Fatima Convent Senior Secondary" />
-    <meta property="og:description" content="Fatima Convent Senior Secondary" />
-    <meta property="og:image" content="" />
-    <meta name="format-detection" content="telephone=no" />
-    <link
-      rel="icon"
-      href="{% static 'images/icon/favicon.ico' %}"
-      type="image/x-icon"
-    />
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      href="{% static 'images/icon/bg-logo-removebg-preview.png' %}"
-    />
-    <title>Contact Us - Fatima Convent Senior Secondary</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/assets.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/typography.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/shortcodes/shortcodes.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/style.css' %}"
-    />
-    <link
-      class="skin"
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/color/color-1.css' %}"
-    />
-    <style>
-      #form_need {
-        display: block !important;
-        width: 100%;
-        height: calc(1.5em + 0.75rem + 2px);
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        appearance: auto;
-        -webkit-appearance: auto;
-      }
-      .no-bootstrap-select + .bootstrap-select {
-        display: none !important;
-      }
-    </style>
-  </head>
 
-  <body id="bg">
-    <div class="page-wraper">
-      <div id="loading-icon-bx" class="preloader">
-        <div class="icon"></div>
-      </div>
+{% block title %}Contact Us - Fatima Convent Senior Secondary{% endblock %}
 
-        <!-- Header ==== -->
-        <header class="header rs-nav">
-            <div class="top-bar">
-                <div class="container">
-                    <div class="row d-flex justify-content-between">
-                        <div class="topbar-right"><ul></ul></div>
-                    </div>
-                </div>
-            </div>
-            <div class="sticky-header navbar-expand-lg">
-                <div class="menu-bar clearfix">
-                    <div class="container clearfix">
-                        <div class="menu-logo">
-                            <a href="{% url 'home' %}"><img src="{% static 'images/icon/school__logo-removebg-preview.png' %}" alt=""></a>
-                            <a href="{% url 'home' %}"><img src="{% static 'images/icon/school_logo_White_edited-removebg-preview.png' %}" alt=""></a>
-                        </div>
-                        <button class="navbar-toggler collapsed menuicon justify-content-end" type="button"
-                            data-toggle="collapse" data-target="#menuDropdown" aria-controls="menuDropdown"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span></span><span></span><span></span>
-                        </button>
-                        <div class="secondary-menu">
-                            <div class="secondary-inner"><ul></ul></div>
-                        </div>
-                        <div class="menu-links navbar-collapse collapse justify-content-start" id="menuDropdown">
-                            <div class="logo">
-                                <a href="{% url 'home' %}"><img class="img-align" src="{% static 'images/icon/school_logo_White_edited-removebg-preview.png' %}" alt="" width="60"></a>
-                            </div>
-                            <ul class="nav navbar-nav">
-                                <li><a href="{% url 'home' %}">Home</a></li>
-                                <li>
-                                    <a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
-                                    <ul class="sub-menu">
-                                        <li><a href="{% url 'about' %}">About</a></li>
-                                        <li><a href="{% url 'error-404' %}">Event</a></li>
-                                        <li><a href="{% url 'gallery' %}">Gallery</a></li>
-                                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
-                                    </ul>
-                                </li>
-                                
-                                <li class="add-mega-menu">
-                                    <a href="javascript:;">Academics <i class="fa fa-chevron-down"></i></a>
-                                    <ul class="sub-menu add-menu">
-                                        <li class="add-menu-left">
-                                            <h5 class="menu-adv-title">Academics</h5>
-                                            <ul>
-                                                <li><a href="{% url 'error-404' %}">Admission Details</a></li>
-                                                <li><a href="{% url 'error-404' %}">Fee Structure</a></li>
-                                                <li><a href="{% url 'error-404' %}">Result</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="add-menu-right">
-                                            <img src="{% static 'images/adv/adv.jpg' %}" alt="home_image" />
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-dashboard">
-                                    <a href="javascript:;">Administration <i class="fa fa-chevron-down"></i></a>
-                                    <ul class="sub-menu">
-                                        <li class="add-menu-left">
-                                            <h5 class="menu-adv-title">School Administration</h5>
-                                        </li>
-                                        <li><a href="{% url 'error-404' %}">School Committee</a></li>
-                                        <li><a href="{% url 'error-404' %}">Staff Details</a></li>
-                                        <li><a href="{% url 'error-404' %}">Staff Vacancy</a></li>
-                                        <li><a href="{% url 'error-404' %}">Review</a></li>
-                                        <li><a href="{% url 'error-404' %}">Teacher Profile</a></li>
-                                        <li><a href="{% url 'error-404' %}">User Profile</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <div class="nav-social-link">
-                                <a href="javascript:;"><i class="fa fa-facebook"></i></a>
-                                <a href="javascript:;"><i class="fa fa-google-plus"></i></a>
-                                <a href="javascript:;"><i class="fa fa-linkedin"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- Header END ==== -->
 
+{% block extra_css %}
+  <style>
+    #form_need {
+      display: block !important;
+      width: 100%;
+      height: calc(1.5em + 0.75rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      appearance: auto;
+      -webkit-appearance: auto;
+    }
+    .no-bootstrap-select + .bootstrap-select {
+      display: none !important;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
       <div class="page-content bg-white">
-        <div
-          class="page-banner"
-         style="background-image: url('{% static "images/banner/banner1.jpeg" %}');"
-        >
+        <div class="page-banner" style="background-image: url('{% static "images/banner/banner1.jpeg" %}');">
           <div class="container">
             <div class="page-banner-entry">
               <h1 class="text-white">Contact Us</h1>
@@ -184,10 +45,7 @@
           <div class="container">
             <div class="row">
               <div class="col-lg-5 col-md-5 m-b30">
-                <div
-                  class="bg-primary text-white contact-info-bx"
-                  style="border-radius: 14px"
-                >
+                <div class="bg-primary text-white contact-info-bx" style="border-radius: 14px;">
                   <h2 class="m-b10 title-head">
                     Contact <span>Information</span>
                   </h2>
@@ -426,163 +284,11 @@
         </div>
       </div>
 
-      <!-- Footer ==== -->
-      <footer>
-        <div class="footer-top">
-          <div class="pt-exebar">
-            <div class="container">
-              <div class="d-flex align-items-stretch">
-                <div class="pt-logo mr-auto">
-                  <a href="{% url 'home' %}"
-                    ><img
-                      src="{% static 'images/icon/fatima_name_logo-removebg-preview.png' %}"
-                      alt=""
-                  /></a>
-                </div>
-                <div class="pt-social-link">
-                  <ul class="list-inline m-a0">
-                    <li>
-                      <a href="#" class="btn-link"
-                        ><i class="fa fa-facebook"></i
-                      ></a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-link"
-                        ><i class="fa fa-twitter"></i
-                      ></a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-link"
-                        ><i class="fa fa-linkedin"></i
-                      ></a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-link"
-                        ><i class="fa fa-google-plus"></i
-                      ></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-4 col-md-12 col-sm-12 footer-col-4">
-                <div class="widget">
-                  <h5 class="footer-title">Sign Up For A Newsletter</h5>
-                  <p class="text-capitalize m-b20">
-                    Weekly breaking news, events and announcements from Fatima
-                    Convent School.
-                  </p>
-                  <div
-                    class="newsletter-message"
-                    id="newsletter-message"
-                    style="display: none; margin-bottom: 10px"
-                  ></div>
-                  <div class="subscribe-form m-b20">
-                    <div class="input-group">
-                      <input
-                        id="newsletter-email"
-                        type="email"
-                        class="form-control"
-                        placeholder="Your Email Address"
-                      />
-                      <span class="input-group-btn">
-                        <button id="newsletter-btn" type="button" class="btn">
-                          <i class="fa fa-arrow-right"></i>
-                        </button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-lg-5 col-md-7 col-sm-12">
-                <div class="row">
-                  <div class="col-4 col-lg-4 col-md-4 col-sm-4">
-                    <div class="widget footer_widget">
-                      <h5 class="footer-title">Company</h5>
-                      <ul>
-                        <li><a href="{% url 'home' %}">Home</a></li>
-                        <li><a href="{% url 'about' %}">About</a></li>
-                        <li><a href="{% url 'contact' %}">Contact</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-4 col-lg-4 col-md-4 col-sm-4">
-                    <div class="widget footer_widget">
-                      <h5 class="footer-title">Get In Touch</h5>
-                      <ul>
-                        <li><a href="{% url 'contact' %}">Login</a></li>
-                        <li><a href="{% url 'gallery' %}">Gallery</a></li>
-                        <li><a href="{% url 'error-404' %}">Event</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-lg-5 col-md-7 col-sm-12">
-                <div class="row">
-                  <div class="col-4 col-lg-4 col-md-4 col-sm-4">
-                    <div class="widget footer_widget">
-                      <h5 class="footer-title">Company</h5>
-                      <ul>
-                        <li><a href="{% url 'home' %}">Home</a></li>
-                        <li><a href="{% url 'about' %}">About</a></li>
-                        <li><a href="{% url 'contact' %}">Contact</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-4 col-lg-4 col-md-4 col-sm-4">
-                    <div class="widget footer_widget">
-                      <h5 class="footer-title">Get In Touch</h5>
-                      <ul>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="{% url 'gallery' %}">Gallery</a></li>
-                        <li><a href="{% url 'error-404' %}">Event</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12 text-center text-white">
-                Developed, Designed & Maintained By
-                <div class="name-highlight">&lt;/Tensor_Block&gt;</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-      <!-- Footer END ==== -->
+{% endblock %}
 
-      <button class="back-to-top fa fa-chevron-up"></button>
-    </div>
 
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'vendors/bootstrap/js/popper.min.js' %}"></script>
-    <script src="{% static 'vendors/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'vendors/bootstrap-select/bootstrap-select.min.js' %}"></script>
-    <script src="{% static 'vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js' %}"></script>
-    <script src="{% static 'vendors/magnific-popup/magnific-popup.js' %}"></script>
-    <script src="{% static 'vendors/counter/waypoints-min.js' %}"></script>
-    <script src="{% static 'vendors/counter/counterup.min.js' %}"></script>
-    <script src="{% static 'vendors/imagesloaded/imagesloaded.js' %}"></script>
-    <script src="{% static 'vendors/masonry/masonry.js' %}"></script>
-    <script src="{% static 'vendors/masonry/filter.js' %}"></script>
-    <script src="{% static 'vendors/owl-carousel/owl.carousel.js' %}"></script>
-    <script src="{% static 'js/functions.js' %}"></script>
+{% block extra_js %}
     <script src="{% static 'js/login.js' %}"></script>
-
     <script>
       $(document).ready(function () {
         $("#contact-form").submit(function (e) {
@@ -698,5 +404,6 @@
         });
       });
     </script>
+{% endblock %}
   </body>
 </html>
