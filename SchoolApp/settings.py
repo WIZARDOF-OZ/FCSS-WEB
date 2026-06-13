@@ -10,7 +10,7 @@ SCHOOL_EMAIL = os.environ.get('SCHOOL_EMAIL')
 BREVO_API_KEY = os.environ.get('BREVO_API_KEY')
 
 SECRET_KEY = env('SECRET_KEY', default='test-key')
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 # RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
