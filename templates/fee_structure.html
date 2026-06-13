@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fee Structure - Fatima Convent Senior Secondary{% endblock %}
+
+{% block nav_academics %}active{% endblock %}
+
+{% block content %}
+<div class="page-content">
+
+  <!-- Page Banner -->
+  <div class="page-banner">
+    <div class="container">
+      <div class="page-banner-entry">
+        <h1 class="text-white">Fee Structure</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-row">
+    <div class="container">
+      <ul class="list-inline">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li>Fee Structure</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Fee Content -->
+  <div class="content-block">
+    <div class="section-area section-sp1">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-12 heading-bx left">
+            <h2 class="title-head">Fee <span>Structure</span></h2>
+            <p>Academic session fee details for Fatima Convent Senior Secondary School, Rangia.</p>
+          </div>
+        </div>
+
+        {% if fees %}
+        <div style="margin-bottom: 24px;">
+          <span style="background: #ffbc63; color: white; padding: 6px 16px; border-radius: 20px; font-family: Rubik; font-size: 13px; font-weight: 600;">
+            Session: {{ fees.0.session_year }}
+          </span>
+        </div>
+
+        <div class="table-responsive">
+          <table style="width: 100%; border-collapse: collapse; font-family: Rubik; box-shadow: 0 2px 15px rgba(0,0,0,0.08); border-radius: 10px; overflow: hidden;">
+            <thead>
+              <tr style="background: #ffbc63; color: white;">
+                <th style="padding: 14px 20px; text-align: left;">Class</th>
+                <th style="padding: 14px 20px; text-align: right;">Tuition Fee</th>
+                <th style="padding: 14px 20px; text-align: right;">Admission Fee</th>
+                <th style="padding: 14px 20px; text-align: right;">Exam Fee</th>
+                <th style="padding: 14px 20px; text-align: right;">Sports Fee</th>
+                <th style="padding: 14px 20px; text-align: right;">Misc. Fee</th>
+                <th style="padding: 14px 20px; text-align: right; background: #f3a830;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for fee in fees %}
+              <tr style="border-bottom: 1px solid #f0f0f0; {% if forloop.even %}background: #fff7ed;{% else %}background: white;{% endif %}">
+                <td style="padding: 12px 20px; font-weight: 600; color: #303030;">{{ fee.class_name }}</td>
+                <td style="padding: 12px 20px; text-align: right; color: #555;">₹{{ fee.tuition_fee }}</td>
+                <td style="padding: 12px 20px; text-align: right; color: #555;">₹{{ fee.admission_fee }}</td>
+                <td style="padding: 12px 20px; text-align: right; color: #555;">₹{{ fee.exam_fee }}</td>
+                <td style="padding: 12px 20px; text-align: right; color: #555;">₹{{ fee.sports_fee }}</td>
+                <td style="padding: 12px 20px; text-align: right; color: #555;">₹{{ fee.miscellaneous_fee }}</td>
+                <td style="padding: 12px 20px; text-align: right; font-weight: 700; color: #ffbc63;">₹{{ fee.total_fee }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 20px; padding: 15px 20px; background: #fff7ed; border-left: 4px solid #ffbc63; border-radius: 4px;">
+          <p style="margin: 0; font-family: Rubik; font-size: 13px; color: #666;">
+            <i class="fa fa-info-circle" style="color: #ffbc63; margin-right: 8px;"></i>
+            Fees are subject to change. Contact the school office for more information.
+          </p>
+        </div>
+
+        {% else %}
+        <div style="text-align: center; padding: 60px 0; color: #999;">
+          <i class="fa fa-file-text-o" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+          <p style="font-family: Rubik; font-size: 16px;">Fee structure not available yet. Please contact the school office.</p>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

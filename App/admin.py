@@ -11,6 +11,7 @@ from django.urls import path
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from django.conf import settings
+from .models import FeeStructure
 from .models import NewsUpdate
 
 import csv
@@ -344,3 +345,13 @@ class NewsUpdateAdmin(BaseAdmin):
     list_display = ['title', 'date', 'is_active']
     list_editable = ['is_active']
     list_display_links = ['title'] 
+
+
+# Fee Structure
+
+@admin.register(FeeStructure)
+class FeeStructureAdmin(BaseAdmin):
+    list_display = ['class_name', 'session_year', 'tuition_fee', 'admission_fee', 'exam_fee', 'is_active']
+    list_editable = ['is_active']
+    list_display_links = ['class_name']
+    list_filter = ['session_year', 'is_active']

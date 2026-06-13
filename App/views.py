@@ -8,6 +8,7 @@ import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from django.http import JsonResponse
 from .models import NewsUpdate
+from .models import FeeStructure
 import re
 
 
@@ -266,3 +267,9 @@ def newsletter_subscribe(request):
         })
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
+
+
+def fee_structure(request):
+    fees = FeeStructure.objects.filter(is_active=True)
+    return render(request, 'fee_structure.html', {'fees': fees})

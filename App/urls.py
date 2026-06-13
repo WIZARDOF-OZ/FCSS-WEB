@@ -26,6 +26,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('gallery/', views.gallery, name='gallery'),
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter-subscribe'),
+    path('academics/fee-structure/', views.fee_structure, name='fee-structure'),
 
     # Add more URL patterns for other pages/views as needed
 ]

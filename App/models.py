@@ -105,3 +105,44 @@ class NewsUpdate(models.Model):
 
     class Meta:
         ordering = ['-date', '-id']
+
+
+# Fee-Structure section
+class FeeStructure(models.Model):
+    CLASS_CHOICES = [
+        ('Nursery', 'Nursery'),
+        ('LKG', 'LKG'),
+        ('UKG', 'UKG'),
+        ('Class I', 'Class I'),
+        ('Class II', 'Class II'),
+        ('Class III', 'Class III'),
+        ('Class IV', 'Class IV'),
+        ('Class V', 'Class V'),
+        ('Class VI', 'Class VI'),
+        ('Class VII', 'Class VII'),
+        ('Class VIII', 'Class VIII'),
+        ('Class IX', 'Class IX'),
+        ('Class X', 'Class X'),
+        ('Class XI', 'Class XI'),
+        ('Class XII', 'Class XII'),
+    ]
+
+    class_name = models.CharField(max_length=50, choices=CLASS_CHOICES)
+    tuition_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    admission_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    exam_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    sports_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    miscellaneous_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    session_year = models.CharField(max_length=20, default='2025-26')
+    is_active = models.BooleanField(default=True)
+
+    def total_fee(self):
+        return self.tuition_fee + self.admission_fee + self.exam_fee + self.sports_fee + self.miscellaneous_fee
+
+    def __str__(self):
+        return f"{self.class_name} - {self.session_year}"
+
+    class Meta:
+        ordering = ['class_name']
+        verbose_name = 'Fee Structure'
+        verbose_name_plural = 'Fee Structures'
