@@ -149,9 +149,14 @@ UNFOLD = {
     "SITE_URL": "/",
     "SITE_LOGO": lambda request: static("images/icon/school__logo-removebg-preview.png"),
     "SITE_LOGO_COLLAPSED": lambda request: static("images/icon/school__logo-removebg-preview.png"),
+    "SITE_FAVICON": lambda request: static("images/icon/favicon.ico"),  # add this
     "LOGIN": {
         "title": "FCSS Administration",
-        "description": "Welcome to FCSS Admin",
+        "description": "Welcome to Fatima Convent Senior Secondary School Admin Panel",
+    },
+    "SIDEBAR": {
+        "show_search": True,   # search bar in sidebar
+        "show_all_applications": True,
     },
     "COLORS": {
         "primary": {
