@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from unfold.admin import ModelAdmin          # ← Unfold base for ALL admins
-from .models import Dashboard, Banner, GalleryItem, About
+from .models import Banner, GalleryItem, About
 from App.models import NewsletterSubscriber
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -38,8 +38,7 @@ class CategoryAdmin(BaseAdmin):
     search_fields = ('title',)
 
 
-class DashboardAdmin(BaseAdmin):
-    list_display = ('banner_title', 'add_date')
+
 
 
 @admin.register(GalleryItem)
@@ -67,7 +66,7 @@ class AboutAdmin(BaseAdmin):
     pass
 
 
-admin.site.register(Dashboard, DashboardAdmin)
+
 admin.site.register(Banner, CategoryAdmin)
 
 
@@ -233,7 +232,7 @@ class NewsletterSubscriberAdmin(BaseAdmin):   #
                 )
             return HttpResponseRedirect('../')
 
-        # GET — render compose form
+        # GET - render compose form
         if qs is not None:
             active_count = qs.filter(is_active=True).count()
             total_count  = qs.count()

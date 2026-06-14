@@ -38,17 +38,6 @@ class Banner(models.Model):
         return self.title
 
 
-class Dashboard(models.Model):
-    banner_title = models.CharField(max_length=100)
-    total_students = models.IntegerField(default=0)
-    total_teachers = models.IntegerField(default=0)
-    total_classes = models.IntegerField(default=0)
-    upcoming_events = models.TextField(blank=True)
-    notifications = models.TextField(blank=True)
-    add_date = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return f"{self.banner_title} Dashboard"
 
 
 # ← fixed: removed dots from extensions, fixed ValidationError import
