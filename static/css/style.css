@@ -860,10 +860,59 @@ html.body {
   left: 0;
 }
 
-.menu-links .menu-logo,
-.menu-links .nav-social-link {
-  display: none;
+
+/* Nav Social Links Test */
+@media (min-width: 992px) {
+  .menu-links .nav-social-link {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center;
+      gap: 12px;
+      margin-left: 20px;
+      padding-left: 20px;
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .menu-links .nav-social-link a {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff !important;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .menu-links .nav-social-link a:hover {
+      background: #ffbc63;
+      border-color: #ffbc63;
+      color: #fff !important;
+      transform: translateY(-2px);
+  }
+
+  /* After scroll when header is dark */
+.is-fixed .menu-links .nav-social-link {
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+.is-fixed .menu-links .nav-social-link a {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.is-fixed .menu-links .nav-social-link a:hover {
+    background: #ffbc63 !important;
+    border-color: #ffbc63 !important;
+    color: #fff !important;
+}
+}
+/* -------------------------------------- */
 
 /* Header Extra Nav */
 .secondary-inner ul {
@@ -904,10 +953,10 @@ html.body {
     display: block !important;
   }
 
-  .menu-links .menu-logo,
+  /* .menu-links .menu-logo,
   .menu-links .nav-social-link {
-    display: block;
-  }
+    display: flex;
+  } */
 
   .menu-links .nav-social-link {
     margin-top: auto;
@@ -1245,10 +1294,15 @@ html.body {
   width: 100%;
 }
 
-.header-transparent .menu-bar {
-  background-color: rgba(0, 0, 0, 0);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+.header-transparent .top-bar {
+  background-color: rgba(0, 0, 0, 0.2);
 }
+
+.header-transparent .menu-bar {
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
 
 .header-transparent .menu-links .nav > li > a {
   color: #fff;
@@ -1448,6 +1502,26 @@ html.body {
     font-size: 20px;
     text-align: center;
   }
+}
+
+.page-banner {
+  position: relative;
+}
+
+.page-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.393);
+  z-index: 1;
+}
+
+.page-banner .container {
+  position: relative;
+  z-index: 2;
 }
 
 /*========================
