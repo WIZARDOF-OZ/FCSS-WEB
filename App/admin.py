@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from unfold.admin import ModelAdmin          # ← Unfold base for ALL admins
+from unfold.admin import ModelAdmin          
 from .models import Banner, GalleryItem, About
 from App.models import NewsletterSubscriber
 from django.http import HttpResponse, HttpResponseRedirect
