@@ -14,7 +14,10 @@ from App.forms import StudentRegistrationForm
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth import login as django_login
-
+from django.contrib.auth import login as django_login, logout as django_logout, authenticate
+from django.contrib.auth.decorators import login_required
+import razorpay
+from App.models import Transaction
 
 def home(request):
     news_updates = NewsUpdate.objects.filter(is_active=True)
@@ -495,3 +498,182 @@ def verify_otp(request):
         return JsonResponse({'status': 'success', 'redirect': '/student/payment/'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
+def student_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+        password = request.POST.get('password', '')
+
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            django_login(request, user)
+            return redirect('student-dashboard')
+        else:
+            return render(request, 'student/login.html', {
+                'error': 'Invalid email or password.'
+            })
+
+    return render(request, 'student/login.html')
+
+
+def student_logout(request):
+    django_logout(request)
+    return redirect('home')
+
+
+@login_required(login_url='student-login')
+def student_dashboard(request):
+    try:
+        application = request.user.student_profile
+    except StudentApplication.DoesNotExist:
+        application = None
+
+    return render(request, 'student/dashboard.html', {
+        'application': application,
+    })
+    
+
+# RazorPay code
+def _get_razorpay_client():
+    return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+
+@login_required(login_url='student-login')
+def payment_summary(request):
+    try:
+        application = request.user.student_profile
+    except StudentApplication.DoesNotExist:
+        return redirect('student-register')
+
+    if application.status == 'confirmed':
+        return redirect('student-dashboard')
+
+    if not application.fee_structure:
+        return render(request, 'student/payment.html', {
+            'application': application,
+            'error': 'Fee structure not configured for your class yet. Please contact the school office.',
+        })
+
+    return render(request, 'student/payment.html', {
+        'application': application,
+        'fee': application.fee_structure,
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+    })
+
+
+@login_required(login_url='student-login')
+def create_razorpay_order(request):
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
+    try:
+        application = request.user.student_profile
+    except StudentApplication.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'No application found.'})
+
+    if not application.fee_structure:
+        return JsonResponse({'status': 'error', 'message': 'Fee structure not set for your class.'})
+
+    amount = application.fee_structure.total_fee()
+    amount_paise = int(amount * 100)  # Razorpay works in the smallest currency unit
+
+    client = _get_razorpay_client()
+    try:
+        order = client.order.create({
+            'amount': amount_paise,
+            'currency': 'INR',
+            'payment_capture': 1,
+        })
+    except Exception as e:
+        print(f"RAZORPAY ORDER ERROR: {str(e)}")
+        return JsonResponse({'status': 'error', 'message': 'Could not initiate payment. Please try again.'})
+
+    Transaction.objects.create(
+        application=application,
+        razorpay_order_id=order['id'],
+        amount=amount,
+        status='created',
+    )
+
+    return JsonResponse({
+        'status': 'success',
+        'order_id': order['id'],
+        'amount': amount_paise,
+        'key_id': settings.RAZORPAY_KEY_ID,
+        'student_name': application.full_name(),
+        'student_email': application.email,
+        'student_phone': application.phone_number,
+    })
+
+
+@login_required(login_url='student-login')
+def verify_razorpay_payment(request):
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
+    razorpay_order_id   = request.POST.get('razorpay_order_id')
+    razorpay_payment_id = request.POST.get('razorpay_payment_id')
+    razorpay_signature   = request.POST.get('razorpay_signature')
+
+    try:
+        application = request.user.student_profile
+        transaction = Transaction.objects.filter(
+            razorpay_order_id=razorpay_order_id,
+            application=application,
+        ).latest('created_at')
+    except (StudentApplication.DoesNotExist, Transaction.DoesNotExist):
+        return JsonResponse({'status': 'error', 'message': 'Transaction not found.'})
+
+    client = _get_razorpay_client()
+
+    try:
+        client.utility.verify_payment_signature({
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature,
+        })
+    except razorpay.errors.SignatureVerificationError:
+        transaction.status = 'failed'
+        transaction.razorpay_payment_id = razorpay_payment_id
+        transaction.save()
+        application.status = 'payment_failed'
+        application.save()
+        return JsonResponse({'status': 'error', 'message': 'Payment verification failed.'})
+
+    # Signature valid, payment confirmed
+    transaction.status = 'success'
+    transaction.razorpay_payment_id = razorpay_payment_id
+    transaction.razorpay_signature = razorpay_signature
+    transaction.save()
+
+    application.status = 'confirmed'
+    application.save()
+
+    # Notify the student their admission is confirmed
+    try:
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key['api-key'] = settings.BREVO_API_KEY
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+            sib_api_v3_sdk.ApiClient(configuration)
+        )
+        html = f"""
+<html><body style="font-family: Arial, sans-serif; padding:20px;">
+<h2>Admission Confirmed 🎉</h2>
+<p>Dear {application.full_name()},</p>
+<p>Your payment of ₹{transaction.amount} has been received and your admission to
+<strong>{application.applying_class}{' (' + application.course + ')' if application.course else ''}</strong>
+is now confirmed.</p>
+<p>Welcome to Fatima Convent Senior Secondary School!</p>
+</body></html>
+"""
+        msg = sib_api_v3_sdk.SendSmtpEmail(
+            to=[{"email": application.email}],
+            sender={"email": settings.DEFAULT_FROM_EMAIL},
+            subject='Admission Confirmed — Fatima Convent School',
+            html_content=html,
+        )
+        api_instance.send_transac_email(msg)
+    except Exception as e:
+        print(f"CONFIRMATION EMAIL ERROR: {str(e)}")
+
+    return JsonResponse({'status': 'success', 'redirect': '/student/dashboard/'})

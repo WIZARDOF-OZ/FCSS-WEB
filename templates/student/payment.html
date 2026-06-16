@@ -1,0 +1,184 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Complete Payment -
+Fatima Convent Senior Secondary{% endblock %} {% block content %}
+<div class="page-content">
+  <div class="page-banner">
+    <div class="container">
+      <div class="page-banner-entry">
+        <h1 class="text-white">Complete Your Payment</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="padding: 50px 0">
+    {% if error %}
+    <div style="text-align: center; padding: 40px; color: #d9534f">
+      <p>{{ error }}</p>
+    </div>
+    {% else %}
+
+    <div style="max-width: 600px; margin: 0 auto">
+      <h3 style="margin-bottom: 20px">
+        {{ application.full_name }} — {{ application.applying_class }}{% if
+        application.course %} ({{ application.course }}){% endif %}
+      </h3>
+
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse;
+          font-family: Rubik;
+          box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+          border-radius: 10px;
+          overflow: hidden;
+        "
+      >
+        <tbody>
+          <tr style="background: #fff7ed">
+            <td style="padding: 14px 20px">Tuition Fee</td>
+            <td style="padding: 14px 20px; text-align: right">
+              ₹{{ fee.tuition_fee }}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 14px 20px">Admission Fee</td>
+            <td style="padding: 14px 20px; text-align: right">
+              ₹{{ fee.admission_fee }}
+            </td>
+          </tr>
+          <tr style="background: #fff7ed">
+            <td style="padding: 14px 20px">Exam Fee</td>
+            <td style="padding: 14px 20px; text-align: right">
+              ₹{{ fee.exam_fee }}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 14px 20px">Sports Fee</td>
+            <td style="padding: 14px 20px; text-align: right">
+              ₹{{ fee.sports_fee }}
+            </td>
+          </tr>
+          <tr style="background: #fff7ed">
+            <td style="padding: 14px 20px">Miscellaneous Fee</td>
+            <td style="padding: 14px 20px; text-align: right">
+              ₹{{ fee.miscellaneous_fee }}
+            </td>
+          </tr>
+          <tr style="background: #ffbc63; color: white; font-weight: 700">
+            <td style="padding: 16px 20px">Total Amount</td>
+            <td style="padding: 16px 20px; text-align: right">
+              ₹{{ fee.total_fee }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: center; margin-top: 30px">
+        <button
+          id="pay-now-btn"
+          class="btn btn-success"
+          style="padding: 12px 40px; font-size: 16px"
+        >
+          Complete the Payment
+        </button>
+      </div>
+      <div
+        id="payment-message"
+        style="text-align: center; margin-top: 15px"
+      ></div>
+    </div>
+
+    {% endif %}
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#pay-now-btn").on("click", function () {
+      var btn = $(this);
+      var msgBox = $("#payment-message");
+
+      btn.prop("disabled", true).text("Processing...");
+
+      $.ajax({
+        type: "POST",
+        url: "{% url 'create-razorpay-order' %}",
+        data: { csrfmiddlewaretoken: "{{ csrf_token }}" },
+        success: function (response) {
+          if (response.status !== "success") {
+            msgBox.html(
+              '<div class="alert alert-danger">' + response.message + "</div>",
+            );
+            btn.prop("disabled", false).text("Complete the Payment");
+            return;
+          }
+
+          var options = {
+            key: response.key_id,
+            amount: response.amount,
+            currency: "INR",
+            name: "Fatima Convent Senior Secondary School",
+            description: "Admission Fee Payment",
+            order_id: response.order_id,
+            prefill: {
+              name: response.student_name,
+              email: response.student_email,
+              contact: response.student_phone,
+            },
+            theme: { color: "#f8a800" },
+            handler: function (razorpayResponse) {
+              $.ajax({
+                type: "POST",
+                url: "{% url 'verify-razorpay-payment' %}",
+                data: {
+                  csrfmiddlewaretoken: "{{ csrf_token }}",
+                  razorpay_order_id: razorpayResponse.razorpay_order_id,
+                  razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                  razorpay_signature: razorpayResponse.razorpay_signature,
+                },
+                success: function (verifyResponse) {
+                  if (verifyResponse.status === "success") {
+                    msgBox.html(
+                      '<div class="alert alert-success">Payment successful! Redirecting...</div>',
+                    );
+                    setTimeout(function () {
+                      window.location.href = verifyResponse.redirect;
+                    }, 1500);
+                  } else {
+                    msgBox.html(
+                      '<div class="alert alert-danger">' +
+                        verifyResponse.message +
+                        "</div>",
+                    );
+                    btn.prop("disabled", false).text("Complete the Payment");
+                  }
+                },
+                error: function () {
+                  msgBox.html(
+                    '<div class="alert alert-danger">Verification failed. Please contact the school office.</div>',
+                  );
+                  btn.prop("disabled", false).text("Complete the Payment");
+                },
+              });
+            },
+            modal: {
+              ondismiss: function () {
+                btn.prop("disabled", false).text("Complete the Payment");
+              },
+            },
+          };
+
+          var rzp = new Razorpay(options);
+          rzp.open();
+        },
+        error: function () {
+          msgBox.html(
+            '<div class="alert alert-danger">Something went wrong. Please try again.</div>',
+          );
+          btn.prop("disabled", false).text("Complete the Payment");
+        },
+      });
+    });
+  });
+</script>
+{% endblock %}

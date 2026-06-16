@@ -8,6 +8,8 @@ env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SCHOOL_EMAIL = os.environ.get('SCHOOL_EMAIL')
 BREVO_API_KEY = os.environ.get('BREVO_API_KEY')
+RAZORPAY_KEY_ID = env('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET')
 
 SECRET_KEY = env('SECRET_KEY', default='test-key')
 DEBUG = env.bool('DEBUG', default=False)

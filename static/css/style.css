@@ -860,57 +860,56 @@ html.body {
   left: 0;
 }
 
-
 /* Nav Social Links Test */
 @media (min-width: 992px) {
   .menu-links .nav-social-link {
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center;
-      gap: 12px;
-      margin-left: 20px;
-      padding-left: 20px;
-      border-left: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 12px;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .menu-links .nav-social-link a {
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff !important;
-      font-size: 13px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .menu-links .nav-social-link a:hover {
-      background: #ffbc63;
-      border-color: #ffbc63;
-      color: #fff !important;
-      transform: translateY(-2px);
+    background: #ffbc63;
+    border-color: #ffbc63;
+    color: #fff !important;
+    transform: translateY(-2px);
   }
 
   /* After scroll when header is dark */
-.is-fixed .menu-links .nav-social-link {
+  .is-fixed .menu-links .nav-social-link {
     border-left: 1px solid rgba(255, 255, 255, 0.2);
-}
+  }
 
-.is-fixed .menu-links .nav-social-link a {
+  .is-fixed .menu-links .nav-social-link a {
     background: rgba(255, 255, 255, 0.1) !important;
     color: #fff !important;
     border-color: rgba(255, 255, 255, 0.25) !important;
-}
+  }
 
-.is-fixed .menu-links .nav-social-link a:hover {
+  .is-fixed .menu-links .nav-social-link a:hover {
     background: #ffbc63 !important;
     border-color: #ffbc63 !important;
     color: #fff !important;
-}
+  }
 }
 /* -------------------------------------- */
 
@@ -1302,7 +1301,6 @@ html.body {
   background-color: rgba(0, 0, 0, 0.25);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
-
 
 .header-transparent .menu-links .nav > li > a {
   color: #fff;

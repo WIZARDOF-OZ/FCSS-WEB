@@ -28,5 +28,13 @@ urlpatterns = [
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter-subscribe'),
     path('academics/fee-structure/', views.fee_structure, name='fee-structure'),
 
-    # Add more URL patterns for other pages/views as needed
+    # Student admission flow
+    path('student/register/', views.register_student, name='student-register'),
+    path('student/verify-otp/', views.verify_otp, name='student-verify-otp'),
+    path('student/login/', views.student_login, name='student-login'),
+    path('student/logout/', views.student_logout, name='student-logout'),
+    path('student/dashboard/', views.student_dashboard, name='student-dashboard'),
+    path('student/payment/', views.payment_summary, name='student-payment'),
+    path('student/payment/create-order/', views.create_razorpay_order, name='create-razorpay-order'),
+    path('student/payment/verify/', views.verify_razorpay_payment, name='verify-razorpay-payment'),
 ]
