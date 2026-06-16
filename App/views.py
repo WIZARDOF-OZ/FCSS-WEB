@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.core.cache import cache
-from App.models import Banner, About, GalleryItem, NewsletterSubscriber
+from App.models import Banner, About, GalleryItem, NewsletterSubscriber, StudentApplication, OTPVerification, generate_otp, generate_random_password
 import hashlib
 import os
 import sib_api_v3_sdk
@@ -10,7 +10,10 @@ from django.http import JsonResponse
 from .models import NewsUpdate
 from .models import FeeStructure
 import re
-
+from App.forms import StudentRegistrationForm
+from django.utils import timezone
+from django.contrib.auth.models import User
+from django.contrib.auth import login as django_login
 
 
 def home(request):
@@ -273,3 +276,222 @@ def newsletter_subscribe(request):
 def fee_structure(request):
     fees = FeeStructure.objects.filter(is_active=True)
     return render(request, 'fee_structure.html', {'fees': fees})
+
+
+
+# Student Portal code
+def _send_otp_email(email, otp_code):
+    try:
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key['api-key'] = settings.BREVO_API_KEY
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+            sib_api_v3_sdk.ApiClient(configuration)
+        )
+        html = f"""
+<html><body style="font-family: Arial, sans-serif; padding:20px;">
+<h2>Your verification code</h2>
+<p>Use this code to verify your email for Fatima Convent School admission:</p>
+<h1 style="color:#f8a800;">{otp_code}</h1>
+<p>This code expires in 10 minutes.</p>
+</body></html>
+"""
+        msg = sib_api_v3_sdk.SendSmtpEmail(
+            to=[{"email": email}],
+            sender={"email": settings.DEFAULT_FROM_EMAIL},
+            subject='Your OTP — Fatima Convent School Admission',
+            html_content=html,
+        )
+        api_instance.send_transac_email(msg)
+        return True
+    except Exception as e:
+        print(f"OTP EMAIL ERROR: {str(e)}")
+        return False
+
+
+
+
+def register_student(request):
+    if request.method == 'POST':
+        form = StudentRegistrationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            request.session['pending_registration'] = {
+                'first_name': data['first_name'],
+                'last_name': data['last_name'],
+                'father_name': data['father_name'],
+                'mother_name': data['mother_name'],
+                'email': data['email'],
+                'phone_number': data['phone_number'],
+                'date_of_birth': data['date_of_birth'].isoformat(),
+                'gender': data['gender'],
+                'applying_class': data['applying_class'],
+                'course': data.get('course', ''),
+                'password_choice': data['password_choice'],
+                'custom_password': data.get('custom_password', ''),
+            }
+
+            # Only email OTP
+            email_otp = OTPVerification.objects.create(
+                identifier=data['email'], purpose='email'
+            )
+            _send_otp_email(data['email'], email_otp.otp_code)
+
+            return render(request, 'student/verify_otp.html', {
+                'email': data['email'],
+            })
+        else:
+            return render(request, 'student/register.html', {'form': form})
+
+    form = StudentRegistrationForm()
+    return render(request, 'student/register.html', {'form': form})
+
+def verify_otp(request):
+    if request.method == 'POST':
+        email_otp_input = request.POST.get('email_otp', '').strip()
+
+        pending = request.session.get('pending_registration')
+        if not pending:
+            return JsonResponse({'status': 'error', 'message': 'Session expired. Please register again.'})
+
+        email = pending['email']
+
+        try:
+            email_otp = OTPVerification.objects.filter(
+                identifier=email, purpose='email', is_verified=False
+            ).latest('created_at')
+        except OTPVerification.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'OTP not found. Please request again.'})
+
+        if email_otp.is_expired():
+            return JsonResponse({'status': 'error', 'message': 'OTP expired. Please register again.'})
+
+        email_otp.attempts += 1
+        email_otp.save()
+
+        if email_otp.attempts > 5:
+            return JsonResponse({'status': 'error', 'message': 'Too many attempts. Please register again.'})
+
+        if email_otp.otp_code != email_otp_input:
+            return JsonResponse({'status': 'error', 'message': 'Incorrect OTP.'})
+
+        email_otp.is_verified = True
+        email_otp.save()
+
+       
+      
+        #   phone_verified=False,
+    if request.method == 'POST':
+        email_otp_input = request.POST.get('email_otp', '').strip()
+        phone_otp_input = request.POST.get('phone_otp', '').strip()
+
+        pending = request.session.get('pending_registration')
+        if not pending:
+            return JsonResponse({'status': 'error', 'message': 'Session expired. Please register again.'})
+
+        email = pending['email']
+        phone = pending['phone_number']
+
+        try:
+            email_otp = OTPVerification.objects.filter(
+                identifier=email, purpose='email', is_verified=False
+            ).latest('created_at')
+            phone_otp = OTPVerification.objects.filter(
+                identifier=phone, purpose='phone', is_verified=False
+            ).latest('created_at')
+        except OTPVerification.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'OTP not found. Please request again.'})
+
+        if email_otp.is_expired() or phone_otp.is_expired():
+            return JsonResponse({'status': 'error', 'message': 'OTP expired. Please register again.'})
+
+        email_otp.attempts += 1
+        phone_otp.attempts += 1
+        email_otp.save()
+        phone_otp.save()
+
+        if email_otp.attempts > 5 or phone_otp.attempts > 5:
+            return JsonResponse({'status': 'error', 'message': 'Too many attempts. Please register again.'})
+
+        if email_otp.otp_code != email_otp_input:
+            return JsonResponse({'status': 'error', 'message': 'Incorrect email OTP.'})
+        if phone_otp.otp_code != phone_otp_input:
+            return JsonResponse({'status': 'error', 'message': 'Incorrect phone OTP.'})
+
+        email_otp.is_verified = True
+        phone_otp.is_verified = True
+        email_otp.save()
+        phone_otp.save()
+
+        # Both verified — create account + application now
+        if pending['password_choice'] == 'custom':
+            raw_password = pending['custom_password']
+        else:
+            raw_password = generate_random_password()
+
+        user = User.objects.create_user(
+            username=pending['email'],
+            email=pending['email'],
+            password=raw_password,
+            first_name=pending['first_name'],
+            last_name=pending['last_name'],
+        )
+
+        # Match fee structure for class + course
+        fee = FeeStructure.objects.filter(
+            class_name=pending['applying_class'],
+            course=pending['course'],
+            is_active=True,
+        ).first()
+
+        application = StudentApplication.objects.create(
+            user=user,
+            first_name=pending['first_name'],
+            last_name=pending['last_name'],
+            father_name=pending['father_name'],
+            mother_name=pending['mother_name'],
+            email=pending['email'],
+            phone_number=pending['phone_number'],
+            date_of_birth=pending['date_of_birth'],
+            gender=pending['gender'],
+            applying_class=pending['applying_class'],
+            course=pending['course'],
+            fee_structure=fee,
+            email_verified=True,
+            phone_verified=True,
+            password_choice=pending['password_choice'],
+            status='pending_payment',
+        )
+
+        # Email login credentials only if auto-generated
+        if pending['password_choice'] == 'auto':
+            try:
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key['api-key'] = settings.BREVO_API_KEY
+                api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+                    sib_api_v3_sdk.ApiClient(configuration)
+                )
+                html = f"""
+<html><body style="font-family: Arial, sans-serif; padding:20px;">
+<h2>Your student account is ready</h2>
+<p>Login email: <strong>{pending['email']}</strong></p>
+<p>Temporary password: <strong>{raw_password}</strong></p>
+<p>Please log in and complete your fee payment to confirm admission.</p>
+</body></html>
+"""
+                msg = sib_api_v3_sdk.SendSmtpEmail(
+                    to=[{"email": pending['email']}],
+                    sender={"email": settings.DEFAULT_FROM_EMAIL},
+                    subject='Your Student Account — Fatima Convent School',
+                    html_content=html,
+                )
+                api_instance.send_transac_email(msg)
+            except Exception as e:
+                print(f"CREDENTIALS EMAIL ERROR: {str(e)}")
+
+        django_login(request, user)
+        del request.session['pending_registration']
+
+        return JsonResponse({'status': 'success', 'redirect': '/student/payment/'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
